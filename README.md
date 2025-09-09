@@ -8,14 +8,15 @@ Clone it to jump-start your WordPress site repos, or fork it and customize it to
 * WordPress as a Git submodule in `/wp/`
 * Custom content directory in `/content/` (cleaner, and also because it can't be in `/wp/`)
 * `wp-config.php` in the root (because it can't be in `/wp/`)
-* All writable directories are symlinked to similarly named locations under `/shared/`.
+* Composer is installed - https://getcomposer.org/
 
 ## Installation
 
-* Clone this repo with submodules: 
+* Clone this repo with submodules included (the WP core): 
   `git clone --recurse-submodules https://github.com/davidhyland/WordPress-Starter.git .`
-  Note the final `.` which clones the files into the folder root. Destination folder must be empty.
-* Open Git Bash (or a new Git Bash terminal in VSC) and run setup: `./setup.sh`
+  Note the final `.` which clones the files into the folder root. Replace with `foldername` if desired. Destination folder must be empty.
+* Open Git Bash (or a Git Bash terminal in VSC) and run setup: `./setup.sh`
+* Script will take a minute. Be patient. Have a cup of tea.
 
 
 

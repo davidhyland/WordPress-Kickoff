@@ -44,7 +44,7 @@ git submodule update --init --recursive
 
 # Install Composer dependencies
 echo "🎼 Installing Composer dependencies..."
-$COMPOSER_CMD install
+composer install
 
 # Create local-config.php if missing
 if [ ! -f "local-config.php" ]; then

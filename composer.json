@@ -1,0 +1,45 @@
+{
+  "name": "your-username/wp-plugin-bundle",
+  "type": "project",
+  "require": {
+    "wpackagist-plugin/acf-content-analysis-for-yoast-seo": "*",
+    "wpackagist-plugin/all-in-one-wp-migration": "*",
+    "wpackagist-plugin/classic-editor": "*",
+    "wpackagist-plugin/performance-lab": "*",
+    "wpackagist-plugin/safe-svg": "*",
+    "wpackagist-plugin/sg-cachepress": "*",
+    "wpackagist-plugin/sg-security": "*",
+    "wpackagist-plugin/simple-history": "*",
+    "wpackagist-plugin/svg-support": "*",
+    "wpackagist-plugin/updraftplus": "*",
+    "wpackagist-plugin/version-info": "*",
+    "wpackagist-plugin/wordpress-seo": "*",
+    "wpengine/advanced-custom-fields-pro": "*",
+    "gravity/gravityforms": "*",
+    "gravity/gravityformsrecaptcha": "*"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org"
+    },
+    {
+      "type": "composer",
+      "url": "https://connect.advancedcustomfields.com"
+    },
+    {
+      "type": "composer",
+      "url": "https://composer.gravity.io"
+    }
+  ],
+  "extra": {
+    "installer-paths": {
+      "content/plugins/{$name}/": ["type:wordpress-plugin"]
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  }
+}

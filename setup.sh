@@ -48,15 +48,13 @@ composer install
 
 # Create local-config.php if missing
 if [ ! -f "local-config.php" ]; then
-  if [ -f "local-config.example.php" ]; then
-    cp local-config.example.php local-config.php
-    echo "✅ Created local-config.php from example"
-  else
     echo "⚙️ No local-config.example.php found."
     echo "Let's create local-config.php interactively..."
 
     read -p "Database name: " DB_NAME
-    read -p "Database user: " DB_USER
+    read -p "Database user [root]: " DB_USER
+    DB_USER=${DB_USER:-root}
+
     read -s -p "Database password: " DB_PASSWORD
     echo
     read -p "Database host [localhost]: " DB_HOST
@@ -65,8 +63,8 @@ if [ ! -f "local-config.php" ]; then
     read -p "Table prefix [wp_]: " TABLE_PREFIX
     TABLE_PREFIX=${TABLE_PREFIX:-wp_}
 
-    read -p "Enable WP_DEBUG? (true/false) [false]: " WP_DEBUG
-    WP_DEBUG=${WP_DEBUG:-false}
+    read -p "Enable WP_DEBUG? (true/false) [true]: " WP_DEBUG
+    WP_DEBUG=${WP_DEBUG:-true}
 
     echo "🔑 Fetching WordPress salts..."
     SALTS=$(curl -s https://api.wordpress.org/secret-key/1.1/salt/)
@@ -85,7 +83,28 @@ ${SALTS}
 EOL
 
     echo "✅ Created local-config.php with provided values"
-  fi
+
+    # Prompt to create the database
+    read -p "Create this database locally? (y/n) [y]: " CREATE_DB
+    CREATE_DB=${CREATE_DB:-y}
+
+    if [ "$CREATE_DB" = "y" ]; then
+      echo "⚙️ Creating database '${DB_NAME}' on host '${DB_HOST}'..."
+
+      # Prompt for root MySQL password (hidden input)
+      read -s -p "MySQL root password: " MYSQL_ROOT_PASS
+      echo
+
+      # Try creating the database
+      "/F/xampp/mysql/bin/mysql.exe" -u root -p"${MYSQL_ROOT_PASS}" -h "${DB_HOST}" -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+      if [ $? -eq 0 ]; then
+        echo "✅ Database '${DB_NAME}' created (or already exists)"
+      else
+        echo "❌ Failed to create database. Please check credentials and permissions."
+      fi
+    fi
+
 else
   echo "ℹ️ local-config.php already exists, not overwriting"
 fi

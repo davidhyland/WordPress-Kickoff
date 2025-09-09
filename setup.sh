@@ -13,13 +13,38 @@ if [ ! -x "$0" ]; then
   chmod +x "$0"
 fi
 
+# Determine composer command
+if command -v composer >/dev/null 2>&1; then
+  COMPOSER_CMD="composer"
+else
+  if [ -f "composer.phar" ]; then
+    COMPOSER_CMD="php $(pwd)/composer.phar"
+  else
+    echo "⚠️ Composer not found. Installing local composer.phar..."
+    EXPECTED_SIGNATURE="$(curl -s https://composer.github.io/installer.sig)"
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    ACTUAL_SIGNATURE="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+
+    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then
+      >&2 echo '❌ ERROR: Invalid Composer installer signature'
+      rm composer-setup.php
+      exit 1
+    fi
+
+    php composer-setup.php --quiet
+    rm composer-setup.php
+    COMPOSER_CMD="php $(pwd)/composer.phar"
+    echo "✅ Installed local composer.phar"
+  fi
+fi
+
 # Ensure submodules are pulled
 echo "📦 Initializing Git submodules..."
 git submodule update --init --recursive
 
 # Install Composer dependencies
 echo "🎼 Installing Composer dependencies..."
-composer install
+$COMPOSER_CMD install
 
 # Create local-config.php if missing
 if [ ! -f "local-config.php" ]; then

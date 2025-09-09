@@ -12,10 +12,12 @@ Clone it to jump-start your WordPress site repos, or fork it and customize it to
 
 ## Installation
 
-* Clone this repo with submodules included (the WP core): 
-  `git clone --recurse-submodules https://github.com/davidhyland/WordPress-Starter.git .`
+* Clone this repo with submodules included (the WP core):
+`git clone --recurse-submodules https://github.com/davidhyland/WordPress-Starter.git .`
   Note the final `.` which clones the files into the folder root. Replace with `foldername` if desired. Destination folder must be empty.
-* Open Git Bash (or a Git Bash terminal in VSC) and run setup: `./setup.sh`
+* Open Git Bash (or a Git Bash terminal in VSC) and run setup:
+
+`./setup.sh`
 * Script will take a minute. Be patient. Have a cup of tea.
 
 

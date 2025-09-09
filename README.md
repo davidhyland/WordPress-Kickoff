@@ -1,6 +1,7 @@
 # WordPress Skeleton
 
-This is simply a skeleton repo for a WordPress site. Clone it to jump-start your WordPress site repos, or fork it and customize it to your own liking!
+This is simply a skeleton repo for a WordPress site, forked from https://github.com/markjaquith/WordPress-Skeleton. 
+Clone it to jump-start your WordPress site repos, or fork it and customize it to your own liking!
 
 ## Assumptions
 
@@ -8,6 +9,15 @@ This is simply a skeleton repo for a WordPress site. Clone it to jump-start your
 * Custom content directory in `/content/` (cleaner, and also because it can't be in `/wp/`)
 * `wp-config.php` in the root (because it can't be in `/wp/`)
 * All writable directories are symlinked to similarly named locations under `/shared/`.
+
+## Installation
+
+* Clone this repo with submodules: 
+  `git clone --recurse-submodules https://github.com/davidhyland/WordPress-Skeleton.git .`
+  Note the final `.` which clones the files into the folder root. Destination folder must be empty.
+* Run Setup: `./setup.sh`
+
+
 
 ## Questions & Answers
 

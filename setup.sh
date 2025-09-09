@@ -42,6 +42,53 @@ fi
 echo "📦 Initializing Git submodules..."
 git submodule update --init --recursive
 
+
+# === Auth.json Setup for ACF Pro + Gravity Forms ===
+
+# Hardcoded defaults (override here if you want project defaults)
+DEFAULT_ACF_KEY="b3JkZXJfaWQ9MTE4ODkxfHR5cGU9ZGV2ZWxvcGVyfGRhdGU9MjAxNy0xMS0xNiAxNzowMDowNw=="
+DEFAULT_GF_KEY="c6b0f8bac9195c2f32efe56c0fb823e6"
+DEFAULT_SITE_URL="https://local.mcdill.XYZ"
+
+if [ ! -f "auth.json" ]; then
+  echo "🔐 Setting up Composer auth.json for ACF Pro + Gravity Forms"
+
+  # Prompt with defaults
+  read -p "Enter your ACF Pro license key [${DEFAULT_ACF_KEY}]: " ACF_KEY
+  ACF_KEY=${ACF_KEY:-$DEFAULT_ACF_KEY}
+
+  read -p "Enter your Gravity Forms license key [${DEFAULT_GF_KEY}]: " GF_KEY
+  GF_KEY=${GF_KEY:-$DEFAULT_GF_KEY}
+
+  read -p "Enter your site URL [${DEFAULT_SITE_URL}]: " SITE_URL
+  SITE_URL=${SITE_URL:-$DEFAULT_SITE_URL}
+
+  if [ -z "$ACF_KEY" ] && [ -z "$GF_KEY" ]; then
+    echo "ℹ️ Skipping auth.json (no license keys provided)"
+  else
+    # Build JSON dynamically
+    AUTH_CONTENT="{\n    \"http-basic\": {"
+    SEP=""
+
+    if [ -n "$ACF_KEY" ]; then
+      AUTH_CONTENT="$AUTH_CONTENT\n        \"connect.advancedcustomfields.com\": {\n            \"username\": \"$ACF_KEY\",\n            \"password\": \"$SITE_URL\"\n        }"
+      SEP=","
+    fi
+
+    if [ -n "$GF_KEY" ]; then
+      AUTH_CONTENT="$AUTH_CONTENT$SEP\n        \"gravityforms.com\": {\n            \"username\": \"$GF_KEY\",\n            \"password\": \"$SITE_URL\"\n        }"
+    fi
+
+    AUTH_CONTENT="$AUTH_CONTENT\n    }\n}"
+
+    echo -e "$AUTH_CONTENT" > auth.json
+    echo "✅ auth.json created"
+  fi
+else
+  echo "ℹ️ auth.json already exists, skipping"
+fi
+
+
 # Install Composer dependencies
 echo "🎼 Installing Composer dependencies..."
 composer install
@@ -110,3 +157,4 @@ else
 fi
 
 echo "🎉 Setup complete!"
+echo "Don't forget to update hosts, apache/vhosts and SSL cert"

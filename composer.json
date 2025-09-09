@@ -1,5 +1,5 @@
 {
-  "name": "your-username/wp-plugin-bundle",
+  "name": "davidhyland/wp-plugin-bundle",
   "type": "project",
   "require": {
     "wpackagist-plugin/acf-content-analysis-for-yoast-seo": "*",
@@ -43,3 +43,4 @@
     }
   }
 }
+

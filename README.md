@@ -2,6 +2,7 @@
 
 This is simply a skeleton repo for a WordPress site, forked from https://github.com/markjaquith/WordPress-Skeleton. 
 Clone it to jump-start your WordPress site repos, or fork it and customize it to your own liking!
+The original version includes all default WordPress themes since twentyten so this includes my reduced WordPress core fork
 
 ## Assumptions
 

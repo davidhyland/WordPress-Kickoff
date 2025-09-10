@@ -126,6 +126,8 @@ define( 'DB_HOST', '${DB_HOST}' );
 \$table_prefix = '${TABLE_PREFIX}';
 define( 'WP_DEBUG', ${WP_DEBUG} );
 
+define( 'ACF_PRO_LICENSE', '${$ACF_KEY}' );
+
 // WordPress salts
 ${SALTS}
 EOL

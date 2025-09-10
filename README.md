@@ -15,7 +15,7 @@ The original version includes all default WordPress themes since twentyten so th
 
 * Clone this repo with submodules included (the WP core):
 
-`git clone --recurse-submodules https://github.com/davidhyland/WordPress-Starter.git .`
+`git clone https://github.com/davidhyland/WordPress-Starter.git .`
 
   Note the final `.` which clones the files into the folder root. Replace with `foldername` if desired. Destination folder must be empty.
 
@@ -23,7 +23,7 @@ The original version includes all default WordPress themes since twentyten so th
 
 `./setup.sh`
 
-* This bash script will install all essential plugins via composer, create local-config.php with provided database details and create the database
+* This bash script will download the WP core as a submodule, install all essential plugins via composer, create local-config.php with provided database details and create the database
 
 ## Questions & Answers
 

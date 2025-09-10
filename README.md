@@ -23,7 +23,7 @@ The original version includes all default WordPress themes since twentyten so th
 
 `./setup.sh`
 
-* This bash script will download the WP core as a submodule, install all essential plugins via composer, create local-config.php with provided database details and create the database
+* This will take up to a minute to complete. This will download the WP core as a submodule, install all essential plugins via composer, create local-config.php with provided database details and create the database
 
 ## Questions & Answers
 

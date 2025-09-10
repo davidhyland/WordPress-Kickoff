@@ -44,6 +44,7 @@ git submodule update --init --recursive
 
 
 # === Auth.json Setup for ACF Pro + Gravity Forms ===
+# Username: license key / Password: Site URL
 
 # Hardcoded defaults (override here if you want project defaults)
 DEFAULT_ACF_KEY="b3JkZXJfaWQ9MTE4ODkxfHR5cGU9ZGV2ZWxvcGVyfGRhdGU9MjAxNy0xMS0xNiAxNzowMDowNw=="
@@ -90,7 +91,7 @@ fi
 
 
 # Install Composer dependencies
-echo "🎼 Installing Composer dependencies..."
+echo "🎼 Installing Composer dependencies (plugins) ..."
 composer install
 
 # Create local-config.php if missing
@@ -156,5 +157,5 @@ else
   echo "ℹ️ local-config.php already exists, not overwriting"
 fi
 
-echo "🎉 Setup complete!"
-echo "Don't forget to update hosts, apache/vhosts and SSL cert"
+echo "🎉 Setup complete!\n"
+echo "Don't forget to update hosts, apache/vhosts and SSL cert."

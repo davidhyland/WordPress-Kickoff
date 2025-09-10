@@ -19,12 +19,6 @@ if ( file_exists( dirname( __FILE__ ) . '/local-config.php' ) ) {
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/content' );
 define( 'WP_CONTENT_URL', 'https://' . $_SERVER['HTTP_HOST'] . '/content' );
 
-
-// ========================
-// ACF PRO License Key
-// ========================
-define( 'ACF_PRO_LICENSE', 'b3JkZXJfaWQ9MTE4ODkxfHR5cGU9ZGV2ZWxvcGVyfGRhdGU9MjAxNy0xMS0xNiAxNzowMDowNw==' );
-
 // ================================================
 // You almost certainly do not want to change these
 // ================================================

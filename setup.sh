@@ -92,6 +92,29 @@ else
 fi
 
 
+# --- Validation step ---
+echo "🔍 Validating auth.json..."
+
+if ! grep -q "connect.advancedcustomfields.com" auth.json; then
+  echo "❌ Missing ACF entry in auth.json" && exit 1
+fi
+
+if ! grep -q "\"password\": \"null\"" auth.json; then
+  echo "❌ ACF password must be 'null'" && exit 1
+fi
+
+if ! grep -q "composer.gravity.io" auth.json; then
+  echo "❌ Missing Gravity Forms entry in auth.json" && exit 1
+fi
+
+if ! grep -q "${GF_SITE}" auth.json; then
+  echo "❌ Gravity Forms site URL does not match expected value" && exit 1
+fi
+
+echo "✅ auth.json validated successfully."
+
+
+
 # Install Composer dependencies
 echo "🎼 Installing Composer dependencies (plugins) ..."
 composer install

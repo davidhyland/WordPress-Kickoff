@@ -2,7 +2,7 @@
     "http-basic": {
         "connect.advancedcustomfields.com": {
             "username": "b3JkZXJfaWQ9MTE4ODkxfHR5cGU9ZGV2ZWxvcGVyfGRhdGU9MjAxNy0xMS0xNiAxNzowMDowNw==",
-            "password": "https://local.wp-test1"
+            "password": "null"
         },
         "gravityforms.com": {
             "username": "c6b0f8bac9195c2f32efe56c0fb823e6",

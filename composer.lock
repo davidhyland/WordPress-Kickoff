@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "57b15dc3cf0738fb2ca9956ca3149b81",
+    "content-hash": "bc0b7d4ddc847390bc5a89bdf5671fa3",
     "packages": [
         {
             "name": "composer/installers",
@@ -153,11 +153,61 @@
             "time": "2024-06-24T20:46:46+00:00"
         },
         {
-            "name": "gravity/gravityforms",
-            "version": "2.9.17.2",
+            "name": "davidhyland/all-in-one-wp-migration-unlimited-extension",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/davidhyland/all-in-one-wp-migration-unlimited-extension.git",
+                "reference": "3bed99ceaf995392b12211578334a5c5caffc0df"
+            },
             "dist": {
                 "type": "zip",
-                "url": "https://composer.gravity.io/downloads/?plugin=gravityforms&version=2.9.17.2"
+                "url": "https://api.github.com/repos/davidhyland/all-in-one-wp-migration-unlimited-extension/zipball/3bed99ceaf995392b12211578334a5c5caffc0df",
+                "reference": "3bed99ceaf995392b12211578334a5c5caffc0df",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "wordpress-plugin",
+            "license": [
+                "proprietary"
+            ],
+            "support": {
+                "source": "https://github.com/davidhyland/all-in-one-wp-migration-unlimited-extension/tree/master",
+                "issues": "https://github.com/davidhyland/all-in-one-wp-migration-unlimited-extension/issues"
+            },
+            "time": "2025-09-12T14:38:43+00:00"
+        },
+        {
+            "name": "davidhyland/happyfiles-pro",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/davidhyland/happyfiles-pro.git",
+                "reference": "29a5f92212e78fcb04ecc8b91432c7b18f972900"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/davidhyland/happyfiles-pro/zipball/29a5f92212e78fcb04ecc8b91432c7b18f972900",
+                "reference": "29a5f92212e78fcb04ecc8b91432c7b18f972900",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "wordpress-plugin",
+            "license": [
+                "proprietary"
+            ],
+            "support": {
+                "source": "https://github.com/davidhyland/happyfiles-pro/tree/master",
+                "issues": "https://github.com/davidhyland/happyfiles-pro/issues"
+            },
+            "time": "2025-09-12T14:39:25+00:00"
+        },
+        {
+            "name": "gravity/gravityforms",
+            "version": "2.9.17.3",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.gravity.io/downloads/?plugin=gravityforms&version=2.9.17.3"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -394,10 +444,10 @@
         },
         {
             "name": "wpengine/advanced-custom-fields-pro",
-            "version": "6.5.0.1",
+            "version": "6.5.1",
             "dist": {
                 "type": "zip",
-                "url": "https://connect.advancedcustomfields.com/v2/plugins/composer_download?s=composer&p=pro&t=6.5.0.1"
+                "url": "https://connect.advancedcustomfields.com/v2/plugins/composer_download?s=composer&p=pro&t=6.5.1"
             },
             "require": {
                 "composer/installers": "~1.0 || ~2.0"
@@ -412,7 +462,10 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "davidhyland/all-in-one-wp-migration-unlimited-extension": 20,
+        "davidhyland/happyfiles-pro": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {},

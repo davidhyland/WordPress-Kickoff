@@ -17,7 +17,7 @@
     "wpengine/advanced-custom-fields-pro": "*",
     "gravity/gravityforms": "*",
     "gravity/gravityformsrecaptcha": "*",
-    "davidhyland/aiom-unlimited-extension": "dev-master",
+    "davidhyland/all-in-one-wp-migration-unlimited-extension": "dev-master",
     "davidhyland/happyfiles-pro": "dev-master"
   },
   "repositories": [

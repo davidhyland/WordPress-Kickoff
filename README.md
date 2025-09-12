@@ -30,6 +30,11 @@ The original version includes all default WordPress themes since twentyten so th
   * Create local-config.php with provided database details
   * Optionally create the database
 
+## Updating
+
+* To update the config make necessary changes to composer.json then run `composer update --no-install` to update composer.lock
+* Commit and push
+
 ## Questions & Answers
 
 **Q:** What version of WordPress does this track?  

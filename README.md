@@ -19,11 +19,16 @@ The original version includes all default WordPress themes since twentyten so th
 
   Note the final `.` which clones the files into the folder root. Replace with `foldername` if desired. Destination folder must be empty.
 
+* Edit setup.sh and change the default license keys and site URL as needed. Prompts are given to confirm these
+* Also update the MYSQL_EXE constant with the local mysql.exe path, if auto creation of database is desired
 * Open Git Bash (or a Git Bash terminal in VSC) and run setup. 
 
 `./setup.sh`
 
-* This will take up to a minute to complete. This will download the WP core as a submodule, install all essential plugins via composer, create local-config.php with provided database details and create the database
+* This script takes around a minute to complete and will:
+  * Install all required plugins via Composer, installing Composer if needed
+  * Create local-config.php with provided database details
+  * Optionally create the database
 
 ## Questions & Answers
 

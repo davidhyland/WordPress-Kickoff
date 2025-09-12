@@ -74,12 +74,12 @@ if [ ! -f "auth.json" ]; then
     SEP=""
 
     if [ -n "$ACF_KEY" ]; then
-      AUTH_CONTENT="$AUTH_CONTENT\n        \"connect.advancedcustomfields.com\": {\n            \"username\": \"$ACF_KEY\",\n            \"password\": \"$SITE_URL\"\n        }"
+      AUTH_CONTENT="$AUTH_CONTENT\n        \"connect.advancedcustomfields.com\": {\n            \"username\": \"$ACF_KEY\",\n            \"password\": \"null\"\n        }"
       SEP=","
     fi
 
     if [ -n "$GF_KEY" ]; then
-      AUTH_CONTENT="$AUTH_CONTENT$SEP\n        \"gravityforms.com\": {\n            \"username\": \"$GF_KEY\",\n            \"password\": \"$SITE_URL\"\n        }"
+      AUTH_CONTENT="$AUTH_CONTENT$SEP\n        \"composer.gravity.io\": {\n            \"username\": \"$GF_KEY\",\n            \"password\": \"$SITE_URL\"\n        }"
     fi
 
     AUTH_CONTENT="$AUTH_CONTENT\n    }\n}"

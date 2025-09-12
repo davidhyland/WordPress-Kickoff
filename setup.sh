@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -e
 
+# Hardcoded defaults (set defaults here, prompts are given to confirm)
+DEFAULT_ACF_KEY="b3JkZXJfaWQ9MTE4ODkxfHR5cGU9ZGV2ZWxvcGVyfGRhdGU9MjAxNy0xMS0xNiAxNzowMDowNw=="
+DEFAULT_GF_KEY="c6b0f8bac9195c2f32efe56c0fb823e6"
+DEFAULT_SITE_URL="https://local.mcdill.XYZ"
+
+# Update path to mysql.exe (if auto creation of database is required)
+MYSQL_EXE="/F/xampp/mysql/bin/mysql.exe"
+
 # Move into the directory where this script lives
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
@@ -45,12 +53,6 @@ git submodule update --init --recursive
 
 # === Auth.json Setup for ACF Pro + Gravity Forms ===
 # Username: license key / Password: Site URL
-
-# Hardcoded defaults (override here if you want project defaults)
-DEFAULT_ACF_KEY="b3JkZXJfaWQ9MTE4ODkxfHR5cGU9ZGV2ZWxvcGVyfGRhdGU9MjAxNy0xMS0xNiAxNzowMDowNw=="
-DEFAULT_GF_KEY="c6b0f8bac9195c2f32efe56c0fb823e6"
-DEFAULT_SITE_URL="https://local.mcdill.XYZ"
-
 if [ ! -f "auth.json" ]; then
   echo "🔐 Setting up Composer auth.json for ACF Pro + Gravity Forms"
 
@@ -146,7 +148,7 @@ EOL
       echo
 
       # Try creating the database
-      "/F/xampp/mysql/bin/mysql.exe" -u root -p"${MYSQL_ROOT_PASS}" -h "${DB_HOST}" -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+      "${MYSQL_EXE}" -u root -p"${MYSQL_ROOT_PASS}" -h "${DB_HOST}" -e "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
       if [ $? -eq 0 ]; then
         echo "✅ Database '${DB_NAME}' created (or already exists)"

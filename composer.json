@@ -16,7 +16,9 @@
     "wpackagist-plugin/wordpress-seo": "*",
     "wpengine/advanced-custom-fields-pro": "*",
     "gravity/gravityforms": "*",
-    "gravity/gravityformsrecaptcha": "*"
+    "gravity/gravityformsrecaptcha": "*",
+    "davidhyland/aiom-unlimited-extension": "dev-master",
+    "davidhyland/happyfiles-pro": "dev-master"
   },
   "repositories": [
     {
@@ -30,6 +32,14 @@
     {
       "type": "composer",
       "url": "https://composer.gravity.io"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/davidhyland/all-in-one-wp-migration-unlimited-extension.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/davidhyland/happyfiles-pro.git"
     }
   ],
   "extra": {

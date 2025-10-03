@@ -2,14 +2,13 @@
 
 This is simply a skeleton repo for a WordPress site, forked from https://github.com/markjaquith/WordPress-Skeleton. 
 Clone it to jump-start your WordPress site repos, or fork it and customize it to your own liking!
-The original version includes all default WordPress themes since twentyten so this includes my reduced WordPress core fork
+The original version included a submodule of WordPress but this loads the latest official release
 
-## Assumptions
+## Notes & Assumptions
 
-* WordPress as a Git submodule in `/wp/`
 * Custom content directory in `/content/` (cleaner, and also because it can't be in `/wp/`)
 * `wp-config.php` in the root (because it can't be in `/wp/`)
-* Composer is installed - https://getcomposer.org/
+* Composer should be installed - https://getcomposer.org/
 
 ## Installation
 
@@ -27,7 +26,7 @@ The original version includes all default WordPress themes since twentyten so th
 
 * This script takes around a minute to complete and will:
 
-  * Download the WordPress submodule core
+  * Download the latest WordPress core (unless version is specified) removing default plugins and themes
   * Prompt for and create auth.json for secure premium plugins
   * Install all required plugins via Composer, installing Composer if needed
   * Prompt for and create local-config.php with provided database details
@@ -40,8 +39,8 @@ The original version includes all default WordPress themes since twentyten so th
 
 ## Questions & Answers
 
-**Q:** What version of WordPress does this track?  
-**A:** The latest stable release. It should automatically update within 6 hours of a new WordPress stable release. Open an issue if that doesn't happen.
+**Q:** What version of WordPress does this load?  
+**A:** The latest stable release by default. Version can be overridden in the WP_VERSION constant in setup.sh
 
 **Q:** What's the deal with `local-config.php`?  
 **A:** It is for local development, which might have different MySQL credentials or do things like enable query saving or debug mode. This file is ignored by Git, so it doesn't accidentally get checked in. If the file does not exist (which it shouldn't, in production), then WordPress will use the DB credentials defined in `wp-config.php`.

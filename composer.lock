@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bc0b7d4ddc847390bc5a89bdf5671fa3",
+    "content-hash": "3cc254f58c230b864992c311e31063e6",
     "packages": [
         {
             "name": "composer/installers",
@@ -172,8 +172,7 @@
                 "proprietary"
             ],
             "support": {
-                "source": "https://github.com/davidhyland/all-in-one-wp-migration-unlimited-extension/tree/master",
-                "issues": "https://github.com/davidhyland/all-in-one-wp-migration-unlimited-extension/issues"
+                "source": "https://github.com/davidhyland/all-in-one-wp-migration-unlimited-extension/tree/master"
             },
             "time": "2025-09-12T14:38:43+00:00"
         },
@@ -197,17 +196,16 @@
                 "proprietary"
             ],
             "support": {
-                "source": "https://github.com/davidhyland/happyfiles-pro/tree/master",
-                "issues": "https://github.com/davidhyland/happyfiles-pro/issues"
+                "source": "https://github.com/davidhyland/happyfiles-pro/tree/master"
             },
             "time": "2025-09-12T14:39:25+00:00"
         },
         {
             "name": "gravity/gravityforms",
-            "version": "2.9.17.3",
+            "version": "2.9.19",
             "dist": {
                 "type": "zip",
-                "url": "https://composer.gravity.io/downloads/?plugin=gravityforms&version=2.9.17.3"
+                "url": "https://composer.gravity.io/downloads/?plugin=gravityforms&version=2.9.19"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -216,10 +214,10 @@
         },
         {
             "name": "gravity/gravityformsrecaptcha",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "dist": {
                 "type": "zip",
-                "url": "https://composer.gravity.io/downloads/?plugin=gravityformsrecaptcha&version=2.0.0"
+                "url": "https://composer.gravity.io/downloads/?plugin=gravityformsrecaptcha&version=2.0.1"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -300,15 +298,15 @@
         },
         {
             "name": "wpackagist-plugin/safe-svg",
-            "version": "2.3.3",
+            "version": "2.4.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/safe-svg/",
-                "reference": "tags/2.3.3"
+                "reference": "tags/2.4.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/safe-svg.2.3.3.zip"
+                "url": "https://downloads.wordpress.org/plugin/safe-svg.2.4.0.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -371,24 +369,6 @@
             "homepage": "https://wordpress.org/plugins/simple-history/"
         },
         {
-            "name": "wpackagist-plugin/svg-support",
-            "version": "2.5.14",
-            "source": {
-                "type": "svn",
-                "url": "https://plugins.svn.wordpress.org/svg-support/",
-                "reference": "tags/2.5.14"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/svg-support.2.5.14.zip"
-            },
-            "require": {
-                "composer/installers": "^1.0 || ^2.0"
-            },
-            "type": "wordpress-plugin",
-            "homepage": "https://wordpress.org/plugins/svg-support/"
-        },
-        {
             "name": "wpackagist-plugin/updraftplus",
             "version": "1.25.7",
             "source": {
@@ -426,15 +406,15 @@
         },
         {
             "name": "wpackagist-plugin/wordpress-seo",
-            "version": "25.9",
+            "version": "26.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/wordpress-seo/",
-                "reference": "tags/25.9"
+                "reference": "tags/26.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/wordpress-seo.25.9.zip"
+                "url": "https://downloads.wordpress.org/plugin/wordpress-seo.26.0.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"

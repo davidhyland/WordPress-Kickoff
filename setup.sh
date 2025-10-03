@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 set -e
 
-# Hardcoded defaults (set defaults here, prompts are given to confirm)
+# ######################################################
+# CONSTANTS (set defaults here, prompts are given to confirm)
+# ######################################################
 DEFAULT_ACF_KEY="b3JkZXJfaWQ9MTE4ODkxfHR5cGU9ZGV2ZWxvcGVyfGRhdGU9MjAxNy0xMS0xNiAxNzowMDowNw=="
 DEFAULT_GF_KEY="c6b0f8bac9195c2f32efe56c0fb823e6"
 DEFAULT_SITE_URL="https://local.mcdill.XYZ"
-WP_VERSION="latest"   # <-- change this to WP version, or "latest" for latest stable
+
+# Set WordPress version to install
+# Change this to a specific version (e.g., "6.8.1") or
+# leave as "latest" to always get the latest stable release
+WP_VERSION="latest" 
 
 # Update path to mysql.exe (if auto creation of database is required)
 MYSQL_EXE="/F/xampp/mysql/bin/mysql.exe"
@@ -21,6 +27,24 @@ if [ ! -x "$0" ]; then
   echo "🔑 Making setup.sh executable..."
   chmod +x "$0"
 fi
+
+
+# Prompt to confirm or update WordPress version
+while true; do
+    echo "Current WordPress version is set to: $WP_VERSION"
+    read -p "Enter WordPress version to install (press Enter to keep '$WP_VERSION'): " INPUT_WP_VERSION
+    INPUT_WP_VERSION=${INPUT_WP_VERSION:-$WP_VERSION}
+
+    # Validate input: must be 'latest' or x.y.z
+    if [[ "$INPUT_WP_VERSION" == "latest" ]] || [[ "$INPUT_WP_VERSION" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+        WP_VERSION="$INPUT_WP_VERSION"
+        echo "✅ WordPress version set to: $WP_VERSION"
+        break
+    else
+        echo "❌ Invalid version format. Use 'latest' or semantic version like '6.8.3'."
+    fi
+done
+
 
 # Determine composer command
 if command -v composer >/dev/null 2>&1; then

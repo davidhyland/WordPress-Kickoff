@@ -4,11 +4,13 @@ This is simply a skeleton repo for a WordPress site, forked from https://github.
 Clone it to jump-start your WordPress site repos, or fork it and customize it to your own liking!
 The original version included a submodule of WordPress but this loads the latest official release
 
-## Notes & Assumptions
+## Notes
 
-* Custom content directory in `/content/` (cleaner, and also because it can't be in `/wp/`)
+* WordPress core in `/wp/` 
+* All content in `/content/` (plugins, themes, uploads, etc)
 * `wp-config.php` in the root (because it can't be in `/wp/`)
-* Composer should be installed - https://getcomposer.org/
+* Composer should be ideally installed but the script will attempt to install it if needed
+* https://getcomposer.org/
 
 ## Installation
 
@@ -19,6 +21,7 @@ The original version included a submodule of WordPress but this loads the latest
   Note the final `.` which clones the files into the folder root. Replace with `foldername` if desired. Destination folder must be empty.
 
 * Edit setup.sh and change the default license keys and site URL as needed. Prompts are given to confirm these
+* Specify the Wordpress version if necessary. Defaults to latest stable release.
 * Also update the MYSQL_EXE constant with the local mysql.exe path, if auto creation of database is desired
 * Open Git Bash (or a Git Bash terminal in VSC) and run setup. 
 

@@ -14,16 +14,6 @@ MYSQL_EXE="/F/xampp/mysql/bin/mysql.exe"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
 
-# If project root is not empty, remove any leftover .git folder
-if [ "$(ls -A "$SCRIPT_DIR")" ]; then
-  if [ -d "$SCRIPT_DIR/.git" ]; then
-    echo "⚠️  Existing .git directory found in project root — removing..."
-    rm -rf "$SCRIPT_DIR/.git"
-    echo "✅ .git directory removed"
-  fi
-fi
-
-
 echo "🚀 Setting up WordPress Starter in $SCRIPT_DIR"
 
 # Make sure this script is executable

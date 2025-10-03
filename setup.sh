@@ -6,7 +6,7 @@ set -e
 # ######################################################
 DEFAULT_ACF_KEY="b3JkZXJfaWQ9MTE4ODkxfHR5cGU9ZGV2ZWxvcGVyfGRhdGU9MjAxNy0xMS0xNiAxNzowMDowNw=="
 DEFAULT_GF_KEY="c6b0f8bac9195c2f32efe56c0fb823e6"
-DEFAULT_SITE_URL="https://local.mcdill.XYZ"
+DEFAULT_SITE_URL="https://local.mcdill.xyz" # <-- UPDATE URL HERE
 
 # Set WordPress version to install
 # Change this to a specific version (e.g., "6.8.1") or
@@ -35,41 +35,24 @@ while true; do
     read -p "Enter WordPress version to install (press Enter to keep '$WP_VERSION'): " INPUT_WP_VERSION
     INPUT_WP_VERSION=${INPUT_WP_VERSION:-$WP_VERSION}
 
-    # Validate input: must be 'latest' or x.y.z
+    # Validate input: must be 'latest' or x.y or x.y.z
     if [[ "$INPUT_WP_VERSION" == "latest" ]] || [[ "$INPUT_WP_VERSION" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
         WP_VERSION="$INPUT_WP_VERSION"
         echo "✅ WordPress version set to: $WP_VERSION"
         break
     else
-        echo "❌ Invalid version format. Use 'latest' or semantic version like '6.8.3'."
+        echo "❌ Invalid version format. Use 'latest' or semantic version like '6.8' or '6.8.3'."
     fi
 done
 
-
-# Determine composer command
-if command -v composer >/dev/null 2>&1; then
-  COMPOSER_CMD="composer"
+# Strip patch version (third digit) if present, only keep major.minor
+if [[ "$WP_VERSION" != "latest" ]]; then
+    WP_VERSION_MAJOR_MINOR=$(echo "$WP_VERSION" | awk -F. '{print $1 "." $2}')
 else
-  if [ -f "composer.phar" ]; then
-    COMPOSER_CMD="php $(pwd)/composer.phar"
-  else
-    echo "⚠️ Composer not found. Installing local composer.phar..."
-    EXPECTED_SIGNATURE="$(curl -s https://composer.github.io/installer.sig)"
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    ACTUAL_SIGNATURE="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
-
-    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then
-      >&2 echo '❌ ERROR: Invalid Composer installer signature'
-      rm composer-setup.php
-      exit 1
-    fi
-
-    php composer-setup.php --quiet
-    rm composer-setup.php
-    COMPOSER_CMD="php $(pwd)/composer.phar"
-    echo "✅ Installed local composer.phar"
-  fi
+    WP_VERSION_MAJOR_MINOR="latest"
 fi
+
+echo "ℹ️ Using WordPress archive version: $WP_VERSION_MAJOR_MINOR"
 
 
 
@@ -100,11 +83,11 @@ esac
 if [ "$WP_VERSION" = "latest" ]; then
     WP_URL="https://wordpress.org/latest.$EXT"
 else
-    WP_URL="https://wordpress.org/wordpress-$WP_VERSION.$EXT"
+    WP_URL="https://wordpress.org/wordpress-$WP_VERSION_MAJOR_MINOR.$EXT"
 fi
 
 ARCHIVE="wordpress.$EXT"
-echo "📥 Downloading WordPress $WP_VERSION from $WP_URL ..."
+echo "📥 Downloading WordPress $WP_VERSION_MAJOR_MINOR from $WP_URL ..."
 curl -L -o "$ARCHIVE" -w "%{http_code}" "$WP_URL" > http_status.txt
 STATUS=$(cat http_status.txt)
 rm http_status.txt
@@ -142,7 +125,7 @@ rm "$ARCHIVE"
 mv wordpress/* "$WP_DIR"/
 rm -rf wordpress
 
-echo "✅ WordPress $WP_VERSION installed in $WP_DIR/"
+echo "✅ WordPress $WP_VERSION_MAJOR_MINOR installed in $WP_DIR/"
 
 
 
@@ -251,6 +234,34 @@ if ! grep -q "${GF_SITE}" auth.json; then
 fi
 
 echo "✅ auth.json validated successfully."
+
+
+
+# Determine composer command
+if command -v composer >/dev/null 2>&1; then
+  COMPOSER_CMD="composer"
+else
+  if [ -f "composer.phar" ]; then
+    COMPOSER_CMD="php $(pwd)/composer.phar"
+  else
+    echo "⚠️ Composer not found. Installing local composer.phar..."
+    EXPECTED_SIGNATURE="$(curl -s https://composer.github.io/installer.sig)"
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    ACTUAL_SIGNATURE="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+
+    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then
+      >&2 echo '❌ ERROR: Invalid Composer installer signature'
+      rm composer-setup.php
+      exit 1
+    fi
+
+    php composer-setup.php --quiet
+    rm composer-setup.php
+    COMPOSER_CMD="php $(pwd)/composer.phar"
+    echo "✅ Installed local composer.phar"
+  fi
+fi
+
 
 
 

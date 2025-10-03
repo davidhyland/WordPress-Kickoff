@@ -174,7 +174,7 @@ EOL
 
 add_action( 'init', function() {
     // Gravity Forms license sync
-    if ( defined( 'GF_LICENSE_KEY' ) && GF_KEY ) {
+    if ( defined( 'GF_LICENSE_KEY' ) && GF_LICENSE_KEY ) {
         \$stored = get_option( 'gravityforms_license_key' );
         if ( \$stored !== GF_LICENSE_KEY ) {
             update_option( 'gravityforms_license_key', GF_LICENSE_KEY );

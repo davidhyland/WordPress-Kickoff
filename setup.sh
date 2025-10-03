@@ -130,26 +130,37 @@ rm -f "$WP_DIR/wp-content/plugins/hello.php"
 echo "🧹 Organizing default themes..."
 
 # Ensure custom themes dir exists
-mkdir -p "$WP_DIR/content/themes"
+mkdir -p content/themes
 
-# Move latest default WP theme from $WP_DIR/wp-content/themes into content/themes
-LATEST_THEME=$(ls -d "$WP_DIR/wp-content/themes/twenty*" 2>/dev/null | sort -V | tail -n 1)
+THEME_DIR="$WP_DIR/wp-content/themes"
 
-if [ -n "$LATEST_THEME" ]; then
-    THEME_NAME=$(basename "$LATEST_THEME")
-    if [ ! -d "content/themes/$THEME_NAME" ]; then
-        echo "📂 Moving latest theme ($THEME_NAME) into /content/themes..."
-        mv "$LATEST_THEME" "content/themes/"
-        echo "✅ $THEME_NAME moved"
-    else
-        echo "ℹ️ $THEME_NAME already exists in /content/themes, skipping move"
+if [ -d "$THEME_DIR" ]; then
+    # Try to find latest "twenty*" theme
+    LATEST_THEME=$(ls -d "$THEME_DIR"/twenty* 2>/dev/null | sort -V | tail -n 1)
+
+    # Fallback: any theme folder
+    if [ -z "$LATEST_THEME" ]; then
+        LATEST_THEME=$(find "$THEME_DIR" -maxdepth 1 -mindepth 1 -type d | head -n 1)
     fi
-fi
 
-# Remove $WP_DIR/wp-content/themes entirely (cleanup cruft)
-if [ -d "$WP_DIR/wp-content/themes" ]; then
-    rm -rf "$WP_DIR/wp-content/themes"
-    echo "✅ Removed $WP_DIR/wp-content/themes"
+    if [ -n "$LATEST_THEME" ]; then
+        THEME_NAME=$(basename "$LATEST_THEME")
+        if [ ! -d "content/themes/$THEME_NAME" ]; then
+            echo "📂 Moving latest theme ($THEME_NAME) into /content/themes..."
+            mv "$LATEST_THEME" "content/themes/"
+            echo "✅ $THEME_NAME moved"
+        else
+            echo "ℹ️ $THEME_NAME already exists in /content/themes, skipping move"
+        fi
+    else
+        echo "⚠️ No theme found to move from $THEME_DIR"
+    fi
+
+    # Remove remaining themes in wp-content/themes
+    rm -rf "$THEME_DIR"/*
+    echo "✅ Removed remaining themes in $THEME_DIR"
+else
+    echo "⚠️ Theme directory $THEME_DIR does not exist, skipping cleanup"
 fi
 
 

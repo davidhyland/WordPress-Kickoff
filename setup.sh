@@ -50,26 +50,53 @@ fi
 
 
 # ========================
-# WordPress Core setup
+# Download WordPress Core
 # ========================
 WP_DIR="wp"
 
-# If you want latest stable, leave WP_VERSION blank ("")
-if [ -z "$WP_VERSION" ]; then
-  echo "🔹 Fetching latest stable WordPress release..."
-  LATEST_TAG=$(curl -s https://api.github.com/repos/WordPress/WordPress/releases/latest \
-    | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-  WP_VERSION="$LATEST_TAG"
+if [ "$WP_VERSION" = "latest" ]; then
+  WP_BASENAME="latest"
+else
+  WP_BASENAME="wordpress-$WP_VERSION"
 fi
 
-echo "⬇️ Downloading WordPress $WP_VERSION ..."
+# Ensure target directory exists and is empty
 rm -rf "$WP_DIR"
 mkdir -p "$WP_DIR"
 
-curl -L "https://github.com/WordPress/WordPress/archive/refs/tags/$WP_VERSION.tar.gz" \
-  | tar -xz --strip-components=1 -C "$WP_DIR"
+# Detect OS for archive format
+UNAME_OUT="$(uname -s)"
+case "${UNAME_OUT}" in
+    Linux*|Darwin*)
+        WP_URL="https://wordpress.org/${WP_BASENAME}.tar.gz"
+        ARCHIVE="wordpress.tar.gz"
+        echo "📥 Downloading WordPress from $WP_URL ..."
+        curl -L -o "$ARCHIVE" "$WP_URL"
+        echo "📦 Extracting WordPress..."
+        tar -xzf "$ARCHIVE"
+        rm "$ARCHIVE"
+        ;;
+    MINGW*|MSYS*|CYGWIN*|Windows*)
+        WP_URL="https://wordpress.org/${WP_BASENAME}.zip"
+        ARCHIVE="wordpress.zip"
+        echo "📥 Downloading WordPress from $WP_URL ..."
+        curl -L -o "$ARCHIVE" "$WP_URL"
+        echo "📦 Extracting WordPress..."
+        unzip -q "$ARCHIVE"
+        rm "$ARCHIVE"
+        ;;
+    *)
+        echo "❌ Unsupported OS: ${UNAME_OUT}"
+        exit 1
+        ;;
+esac
 
-echo "✅ WordPress $WP_VERSION installed into $WP_DIR/"
+# Move extracted files into wp/ folder
+mv wordpress/* "$WP_DIR"/
+rm -rf wordpress
+
+echo "✅ WordPress $WP_VERSION installed in $WP_DIR/"
+
 
 # Clean bundled plugins & themes
 echo "🧹 Cleaning bundled themes and plugins..."

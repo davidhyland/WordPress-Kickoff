@@ -10,7 +10,6 @@
     "wpackagist-plugin/sg-cachepress": "*",
     "wpackagist-plugin/sg-security": "*",
     "wpackagist-plugin/simple-history": "*",
-    "wpackagist-plugin/svg-support": "*",
     "wpackagist-plugin/updraftplus": "*",
     "wpackagist-plugin/version-info": "*",
     "wpackagist-plugin/wordpress-seo": "*",
@@ -53,4 +52,5 @@
     }
   }
 }
+
 

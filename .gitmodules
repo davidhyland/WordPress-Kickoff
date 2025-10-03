@@ -1,3 +1,0 @@
-[submodule "wp"]
-	path = wp
-	url = https://github.com/davidhyland/WordPressCore.git

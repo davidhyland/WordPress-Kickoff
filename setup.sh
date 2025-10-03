@@ -5,7 +5,7 @@ set -e
 DEFAULT_ACF_KEY="b3JkZXJfaWQ9MTE4ODkxfHR5cGU9ZGV2ZWxvcGVyfGRhdGU9MjAxNy0xMS0xNiAxNzowMDowNw=="
 DEFAULT_GF_KEY="c6b0f8bac9195c2f32efe56c0fb823e6"
 DEFAULT_SITE_URL="https://local.mcdill.XYZ"
-WP_VERSION="6.8.2"   # <-- change this to your desired WP version
+WP_VERSION=""   # <-- change this to WP version, Leave blank for latest stable
 
 # Update path to mysql.exe (if auto creation of database is required)
 MYSQL_EXE="/F/xampp/mysql/bin/mysql.exe"
@@ -47,28 +47,47 @@ else
   fi
 fi
 
-# Ensure submodules are pulled
-echo "📦 Initializing Git submodules..."
-git submodule update --init --recursive
 
 
 # ========================
-# Checkout correct WP version
+# WordPress Core setup
 # ========================
-echo "🔹 Checking out WordPress version $WP_VERSION..."
-cd wp || exit
+WP_DIR="wp"
 
-git fetch --tags
-
-if git rev-parse "refs/tags/$WP_VERSION" >/dev/null 2>&1; then
-    # Create or reset a branch pointing at the tag
-    git checkout -B "wp-$WP_VERSION" "tags/$WP_VERSION"
-    echo "✅ WordPress set to version $WP_VERSION"
-else
-    echo "⚠️ WordPress version $WP_VERSION not found. Staying on current branch."
+# If you want latest stable, leave WP_VERSION blank ("")
+if [ -z "$WP_VERSION" ]; then
+  echo "🔹 Fetching latest stable WordPress release..."
+  LATEST_TAG=$(curl -s https://api.github.com/repos/WordPress/WordPress/releases/latest \
+    | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+  WP_VERSION="$LATEST_TAG"
 fi
 
-cd ..
+echo "⬇️ Downloading WordPress $WP_VERSION ..."
+rm -rf "$WP_DIR"
+mkdir -p "$WP_DIR"
+
+curl -L "https://github.com/WordPress/WordPress/archive/refs/tags/$WP_VERSION.tar.gz" \
+  | tar -xz --strip-components=1 -C "$WP_DIR"
+
+echo "✅ WordPress $WP_VERSION installed into $WP_DIR/"
+
+# Clean bundled plugins & themes
+echo "🧹 Cleaning bundled themes and plugins..."
+rm -f "$WP_DIR/wp-content/plugins/hello.php"
+
+THEMES_DIR="$WP_DIR/wp-content/themes"
+if [ -d "$THEMES_DIR" ]; then
+  NEWEST_THEME=$(ls -d $THEMES_DIR/twenty* 2>/dev/null | sort -V | tail -n 1)
+  if [ -n "$NEWEST_THEME" ]; then
+    echo "Keeping newest theme: $(basename "$NEWEST_THEME")"
+    for theme in $THEMES_DIR/twenty*; do
+      if [ "$theme" != "$NEWEST_THEME" ]; then
+        rm -rf "$theme"
+      fi
+    done
+  fi
+fi
+
 
 
 # === Auth.json Setup for ACF Pro + Gravity Forms ===

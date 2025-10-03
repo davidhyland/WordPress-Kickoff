@@ -160,6 +160,45 @@ EOL
 
     echo "✅ Created local-config.php with provided values"
 
+
+    # Create mu-plugins folder if it doesn't exist
+    mkdir -p content/mu-plugins
+
+    # Generate license-sync.php
+    cat > content/mu-plugins/license-sync.php <<EOL
+<?php
+/**
+ * Plugin Name: License Key Sync
+ * Description: Sync Gravity Forms and ACF Pro license keys from local-config.php constants into the database.
+ */
+
+add_action( 'init', function() {
+    // Gravity Forms license sync
+    if ( defined( 'GF_LICENSE_KEY' ) && GF_KEY ) {
+        \$stored = get_option( 'gravityforms_license_key' );
+        if ( \$stored !== GF_LICENSE_KEY ) {
+            update_option( 'gravityforms_license_key', GF_LICENSE_KEY );
+        }
+    }
+
+    // ACF Pro license sync
+    if ( defined( 'ACF_PRO_KEY' ) && ACF_PRO_KEY ) {
+        \$stored = get_option( 'acf_pro_license' );
+        if ( \$stored !== ACF_PRO_KEY ) {
+            update_option( 'acf_pro_license', ACF_PRO_KEY );
+        }
+    }
+});
+
+// Define constants so they are always available
+if ( ! defined( 'GF_LICENSE_KEY' ) ) {
+    define( 'GF_LICENSE_KEY', '${GF_KEY}' );
+}
+if ( ! defined( 'ACF_PRO_KEY' ) ) {
+    define( 'ACF_PRO_KEY', '${ACF_KEY}' );
+}
+EOL
+
     # Prompt to create the database
     read -p "Create this database locally? (y/n) [y]: " CREATE_DB
     CREATE_DB=${CREATE_DB:-y}

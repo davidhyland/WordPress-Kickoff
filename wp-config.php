@@ -19,6 +19,11 @@ if ( file_exists( dirname( __FILE__ ) . '/local-config.php' ) ) {
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/content' );
 define( 'WP_CONTENT_URL', 'https://' . $_SERVER['HTTP_HOST'] . '/content' );
 
+// ========================
+// Custom Uploads Directory
+// ========================
+define( 'UPLOADS', 'content/uploads' );
+
 // ================================================
 // You almost certainly do not want to change these
 // ================================================

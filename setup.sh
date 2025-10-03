@@ -54,12 +54,6 @@ fi
 # ========================
 WP_DIR="wp"
 
-if [ "$WP_VERSION" = "latest" ]; then
-  WP_BASENAME="latest"
-else
-  WP_BASENAME="wordpress-$WP_VERSION"
-fi
-
 # Ensure target directory exists and is empty
 rm -rf "$WP_DIR"
 mkdir -p "$WP_DIR"
@@ -68,21 +62,44 @@ mkdir -p "$WP_DIR"
 UNAME_OUT="$(uname -s)"
 case "${UNAME_OUT}" in
     Linux*|Darwin*)
-        WP_URL="https://wordpress.org/${WP_BASENAME}.tar.gz"
+        if [ "$WP_VERSION" = "latest" ]; then
+            WP_URL="https://wordpress.org/latest.tar.gz"
+        else
+            WP_URL="https://wordpress.org/wordpress-$WP_VERSION.tar.gz"
+        fi
         ARCHIVE="wordpress.tar.gz"
         echo "📥 Downloading WordPress from $WP_URL ..."
         curl -L -o "$ARCHIVE" "$WP_URL"
+
+        # Sanity check: confirm it's a valid gzip
+        if ! file "$ARCHIVE" | grep -q "gzip compressed"; then
+            echo "❌ Download failed or not a valid tar.gz (got $(file $ARCHIVE))"
+            exit 1
+        fi
+
         echo "📦 Extracting WordPress..."
-        tar -xzf "$ARCHIVE"
+        tar -xzf "$ARCHIVE" || { echo "❌ Extraction failed"; exit 1; }
         rm "$ARCHIVE"
         ;;
     MINGW*|MSYS*|CYGWIN*|Windows*)
-        WP_URL="https://wordpress.org/${WP_BASENAME}.zip"
+        if [ "$WP_VERSION" = "latest" ]; then
+            WP_URL="https://wordpress.org/latest.zip"
+        else
+            WP_URL="https://wordpress.org/wordpress-$WP_VERSION.zip"
+        fi
         ARCHIVE="wordpress.zip"
         echo "📥 Downloading WordPress from $WP_URL ..."
         curl -L -o "$ARCHIVE" "$WP_URL"
+
+        # Sanity check: confirm it's a valid zip
+        if ! unzip -tq "$ARCHIVE" >/dev/null 2>&1; then
+            echo "❌ Download failed or not a valid zip archive"
+            rm "$ARCHIVE"
+            exit 1
+        fi
+
         echo "📦 Extracting WordPress..."
-        unzip -q "$ARCHIVE"
+        unzip -q "$ARCHIVE" || { echo "❌ Extraction failed"; exit 1; }
         rm "$ARCHIVE"
         ;;
     *)

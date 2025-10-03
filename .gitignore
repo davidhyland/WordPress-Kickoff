@@ -29,10 +29,13 @@ local-config.php
 /content/mu-plugins/**
 #!/content/mu-plugins/your-custom-mu-plugin.php
 
-# --- Uploads, cache, upgrades ---
-/content/uploads/**
+# --- Cache, upgrades ---
 /content/cache/**
 /content/upgrade/**
+
+# --- Uploads ---
+/content/uploads/*
+!/content/uploads/index.php
 
 # ========================
 # Composer

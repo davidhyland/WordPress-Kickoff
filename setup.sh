@@ -5,6 +5,7 @@ set -e
 DEFAULT_ACF_KEY="b3JkZXJfaWQ9MTE4ODkxfHR5cGU9ZGV2ZWxvcGVyfGRhdGU9MjAxNy0xMS0xNiAxNzowMDowNw=="
 DEFAULT_GF_KEY="c6b0f8bac9195c2f32efe56c0fb823e6"
 DEFAULT_SITE_URL="https://local.mcdill.XYZ"
+WP_VERSION="6.8.2"   # <-- change this to your desired WP version
 
 # Update path to mysql.exe (if auto creation of database is required)
 MYSQL_EXE="/F/xampp/mysql/bin/mysql.exe"
@@ -49,6 +50,25 @@ fi
 # Ensure submodules are pulled
 echo "📦 Initializing Git submodules..."
 git submodule update --init --recursive
+
+
+# ========================
+# Checkout correct WP version
+# ========================
+echo "🔹 Checking out WordPress version $WP_VERSION..."
+cd wp || exit
+
+git fetch --tags
+
+if git rev-parse "refs/tags/$WP_VERSION" >/dev/null 2>&1; then
+    # Create or reset a branch pointing at the tag
+    git checkout -B "wp-$WP_VERSION" "tags/$WP_VERSION"
+    echo "✅ WordPress set to version $WP_VERSION"
+else
+    echo "⚠️ WordPress version $WP_VERSION not found. Staying on current branch."
+fi
+
+cd ..
 
 
 # === Auth.json Setup for ACF Pro + Gravity Forms ===
@@ -159,6 +179,8 @@ ${SALTS}
 EOL
 
     echo "✅ Created local-config.php with provided values"
+
+
 
 
     # Create mu-plugins folder if it doesn't exist

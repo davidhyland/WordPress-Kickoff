@@ -376,5 +376,7 @@ else
   echo "ℹ️ local-config.php already exists, not overwriting"
 fi
 
-echo "🎉 Setup complete!\n"
-echo "Don't forget to update hosts, apache/vhosts and SSL cert."
+echo "🎉 Setup complete!"
+echo "⚠️ Don't forget to update hosts, apache/vhosts and SSL cert."
+echo "⚠️ You should also delete this setup.sh file after running it."
+echo "✅ Ciao. Adios. Goodnight!"

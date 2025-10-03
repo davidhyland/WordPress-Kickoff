@@ -31,8 +31,8 @@ fi
 
 # Prompt to confirm or update WordPress version
 while true; do
-    echo "Current WordPress version is set to: $WP_VERSION"
-    read -p "Enter WordPress version to install (press Enter to keep '$WP_VERSION'): " INPUT_WP_VERSION
+    echo "🔹Current WordPress version is set to: $WP_VERSION"
+    read -p "💻 Enter WordPress version to install (press Enter to keep '$WP_VERSION'): " INPUT_WP_VERSION
     INPUT_WP_VERSION=${INPUT_WP_VERSION:-$WP_VERSION}
 
     # Validate input: must be 'latest' or x.y or x.y.z
@@ -179,13 +179,13 @@ if [ ! -f "auth.json" ]; then
   echo "🔐 Setting up Composer auth.json for ACF Pro + Gravity Forms"
 
   # Prompt with defaults
-  read -p "Enter your ACF Pro license key [${DEFAULT_ACF_KEY}]: " ACF_KEY
+  read -p "💻 Enter your ACF Pro license key [${DEFAULT_ACF_KEY}]: " ACF_KEY
   ACF_KEY=${ACF_KEY:-$DEFAULT_ACF_KEY}
 
-  read -p "Enter your Gravity Forms license key [${DEFAULT_GF_KEY}]: " GF_KEY
+  read -p "💻 Enter your Gravity Forms license key [${DEFAULT_GF_KEY}]: " GF_KEY
   GF_KEY=${GF_KEY:-$DEFAULT_GF_KEY}
 
-  read -p "Enter your site URL [${DEFAULT_SITE_URL}]: " SITE_URL
+  read -p "💻 Enter your site URL [${DEFAULT_SITE_URL}]: " SITE_URL
   SITE_URL=${SITE_URL:-$DEFAULT_SITE_URL}
 
   if [ -z "$ACF_KEY" ] && [ -z "$GF_KEY" ]; then
@@ -272,21 +272,21 @@ composer install
 # Create local-config.php if missing
 if [ ! -f "local-config.php" ]; then
     echo "⚙️ No local-config.example.php found."
-    echo "Let's create local-config.php interactively..."
+    echo "🔹Let's create local-config.php interactively..."
 
-    read -p "Database name: " DB_NAME
-    read -p "Database user [root]: " DB_USER
+    read -p "⚙️ Database name: " DB_NAME
+    read -p "⚙️ Database user [root]: " DB_USER
     DB_USER=${DB_USER:-root}
 
-    read -s -p "Database password: " DB_PASSWORD
+    read -s -p "⚙️ Database password: " DB_PASSWORD
     echo
-    read -p "Database host [localhost]: " DB_HOST
+    read -p "⚙️ Database host [localhost]: " DB_HOST
     DB_HOST=${DB_HOST:-localhost}
 
-    read -p "Table prefix [wp_]: " TABLE_PREFIX
+    read -p "⚙️ Table prefix [wp_]: " TABLE_PREFIX
     TABLE_PREFIX=${TABLE_PREFIX:-wp_}
 
-    read -p "Enable WP_DEBUG? (true/false) [true]: " WP_DEBUG
+    read -p "💻 Enable WP_DEBUG? (true/false) [true]: " WP_DEBUG
     WP_DEBUG=${WP_DEBUG:-true}
 
     echo "🔑 Fetching WordPress salts..."
@@ -321,45 +321,44 @@ EOL
 <?php
 /**
  * Plugin Name: License Key Sync
- * Description: Sync Gravity Forms and ACF Pro license keys from local-config.php constants into the database.
+ * Description: Sync Gravity Forms license keys from local-config.php constants into the database. Executes once per site.
  */
 
-add_action( 'init', function() {
-    // Gravity Forms license sync
-    if ( defined( 'GF_LICENSE_KEY' ) && GF_LICENSE_KEY ) {
-        \$stored = get_option( 'gravityforms_license_key' );
-        if ( \$stored !== GF_LICENSE_KEY ) {
-            update_option( 'gravityforms_license_key', GF_LICENSE_KEY );
+// Exit if accessed directly
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+add_action('admin_init', function() {
+    // Only run once
+    if (get_option('mu_license_sync_done')) {
+        return; // Already synced
+    }
+
+    // --- Gravity Forms ---
+    if (defined('GF_LICENSE_KEY') && GF_LICENSE_KEY) {
+        \$stored = get_option('gravityforms_license_key');
+        if (\$stored !== GF_LICENSE_KEY) {
+            update_option('gravityforms_license_key', GF_LICENSE_KEY);
         }
     }
 
-    // ACF Pro license sync
-    if ( defined( 'ACF_PRO_KEY' ) && ACF_PRO_KEY ) {
-        \$stored = get_option( 'acf_pro_license' );
-        if ( \$stored !== ACF_PRO_KEY ) {
-            update_option( 'acf_pro_license', ACF_PRO_KEY );
-        }
-    }
+    // Mark as done so it won't run again
+    update_option('mu_license_sync_done', 1);
 });
-
-// Define constants so they are always available
-if ( ! defined( 'GF_LICENSE_KEY' ) ) {
-    define( 'GF_LICENSE_KEY', '${GF_KEY}' );
-}
-if ( ! defined( 'ACF_PRO_KEY' ) ) {
-    define( 'ACF_PRO_KEY', '${ACF_KEY}' );
-}
 EOL
 
+    echo "✅ license-sync.php MU-plugin created"
+
     # Prompt to create the database
-    read -p "Create this database locally? (y/n) [y]: " CREATE_DB
+    read -p "💻 Create this database locally? (y/n) [y]: " CREATE_DB
     CREATE_DB=${CREATE_DB:-y}
 
     if [ "$CREATE_DB" = "y" ]; then
-      echo "⚙️ Creating database '${DB_NAME}' on host '${DB_HOST}'..."
+      echo "🔹Creating database '${DB_NAME}' on host '${DB_HOST}'..."
 
       # Prompt for root MySQL password (hidden input)
-      read -s -p "MySQL root password: " MYSQL_ROOT_PASS
+      read -s -p "⚙️ MySQL root password: " MYSQL_ROOT_PASS
       echo
 
       # Try creating the database

@@ -22,16 +22,17 @@ local-config.php
 #!/content/plugins/your-custom-plugin/   # keep only your custom plugin(s)
 
 # --- Themes ---
-/content/themes/**
-#!/content/themes/your-custom-theme/     # keep only this theme
+/content/themes/twenty*
 
 # --- MU-Plugins (if you only want custom ones tracked) ---
 /content/mu-plugins/**
 !/content/mu-plugins/license-sync.php
-!/content/mu-plugins/register-theme-directory.php
 
-# --- Cache, upgrades ---
+# --- Cache, upgrades, backups ---
 /content/cache/**
+/content/upgrade/**
+/content/ai1wm-backups/**
+/content/updraft/**
 /content/upgrade/**
 
 # --- Uploads ---

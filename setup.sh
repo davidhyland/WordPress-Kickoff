@@ -269,11 +269,54 @@ fi
 echo "🎼 Installing Composer dependencies (plugins) ..."
 composer install
 
-# Create local-config.php if missing
-if [ ! -f "local-config.php" ]; then
-    echo "⚙️ No local-config.example.php found."
-    echo "🔹Let's create local-config.php interactively..."
 
+# =============================
+# Create environment config files
+# =============================
+
+echo "🌍 Creating environment config templates..."
+
+for ENV in local staging production; do
+  CONFIG_FILE="${ENV}-config.php"
+
+  if [ ! -f "${CONFIG_FILE}" ]; then
+    echo "📝 Creating ${CONFIG_FILE}"
+
+    cat > "${CONFIG_FILE}" <<EOL
+<?php
+/**
+ * ${ENV^} environment configuration.
+ * Fill in values manually after setup.
+ */
+
+define( 'DB_NAME', '' ); // ${ENV} DB name
+define( 'DB_USER', '' ); // ${ENV} DB user
+define( 'DB_PASSWORD', '' ); // ${ENV} DB password
+define( 'DB_HOST', 'localhost' );
+\$table_prefix = 'wp_';
+define( 'WP_DEBUG', true );
+
+// Optional license keys
+define( 'ACF_PRO_LICENSE', '' );
+define( 'GF_LICENSE_KEY', '' );
+
+// Add salts here or leave blank (use https://api.wordpress.org/secret-key/1.1/salt/)
+EOL
+
+    echo "✅ ${CONFIG_FILE} created."
+  else
+    echo "⚠️  ${CONFIG_FILE} already exists, skipping."
+  fi
+done
+
+
+
+# Create environment configs
+if [ ! -f "local-config.php" ]; then
+    echo "⚙️ No local-config.php found."
+    echo "🔹Let's create environment config files (local, staging, production)..."
+
+    # Prompt for local DB credentials
     read -p "⚙️ Database name: " DB_NAME
     read -p "⚙️ Database user [root]: " DB_USER
     DB_USER=${DB_USER:-root}
@@ -286,20 +329,57 @@ if [ ! -f "local-config.php" ]; then
     read -p "⚙️ Table prefix [wp_]: " TABLE_PREFIX
     TABLE_PREFIX=${TABLE_PREFIX:-wp_}
 
-    read -p "💻 Enable WP_DEBUG? (true/false) [true]: " WP_DEBUG
-    WP_DEBUG=${WP_DEBUG:-true}
-
     echo "🔑 Fetching WordPress salts..."
     SALTS=$(curl -s https://api.wordpress.org/secret-key/1.1/salt/)
 
-    cat > local-config.php <<EOL
+    ENVIRONMENTS=("local" "staging" "production")
+
+    for ENV in "${ENVIRONMENTS[@]}"; do
+        echo "📄 Creating ${ENV}-config.php..."
+
+        # Set DB values depending on environment
+        if [ "$ENV" = "local" ]; then
+            DBN=$DB_NAME
+            DBU=$DB_USER
+            DBP=$DB_PASSWORD
+            DBH=$DB_HOST
+            DEBUG="true"
+            LOG="true"
+            DISPLAY="true"
+            ERRORS=1
+        elif [ "$ENV" = "staging" ]; then
+            DBN=""
+            DBU=""
+            DBP=""
+            DBH="localhost"
+            DEBUG="true"
+            LOG="true"
+            DISPLAY="false"
+            ERRORS=0
+        else # production
+            DBN=""
+            DBU=""
+            DBP=""
+            DBH="localhost"
+            DEBUG="false"
+            LOG="false"
+            DISPLAY="false"
+            ERRORS=0
+        fi
+
+        cat > "${ENV}-config.php" <<EOL
 <?php
-define( 'DB_NAME', '${DB_NAME}' );
-define( 'DB_USER', '${DB_USER}' );
-define( 'DB_PASSWORD', '${DB_PASSWORD}' );
-define( 'DB_HOST', '${DB_HOST}' );
+// ${ENV^} environment configuration
+define( 'DB_NAME', '${DBN}' );
+define( 'DB_USER', '${DBU}' );
+define( 'DB_PASSWORD', '${DBP}' );
+define( 'DB_HOST', '${DBH}' );
 \$table_prefix = '${TABLE_PREFIX}';
-define( 'WP_DEBUG', ${WP_DEBUG} );
+
+define( 'WP_DEBUG', ${DEBUG} );
+define( 'WP_DEBUG_LOG', ${LOG} );
+define( 'WP_DEBUG_DISPLAY', ${DISPLAY} );
+ini_set( 'display_errors', ${ERRORS} );
 
 define( 'ACF_PRO_LICENSE', '${ACF_KEY}' );
 define( 'GF_LICENSE_KEY', '${GF_KEY}' );
@@ -308,7 +388,12 @@ define( 'GF_LICENSE_KEY', '${GF_KEY}' );
 ${SALTS}
 EOL
 
-    echo "✅ Created local-config.php with provided values"
+    echo "✅ ${ENV}-config.php created."
+
+    done
+
+    echo "✅ All environment configs created: local, staging, and production."
+fi
 
 
 

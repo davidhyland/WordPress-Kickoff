@@ -1,6 +1,6 @@
 # WordPress Skeleton
 
-This is simply a skeleton repo for a WordPress site, forked from https://github.com/markjaquith/WordPress-Skeleton. 
+This is simply a skeleton repo for a WordPress site inspired by https://github.com/markjaquith/WordPress-Skeleton.
 Clone it to jump-start your WordPress site repos, or fork it and customize it to your own liking!
 The original version included a submodule of WordPress but this loads the latest official release
 

@@ -29,103 +29,103 @@ if [ ! -x "$0" ]; then
 fi
 
 
-# Prompt to confirm or update WordPress version
-while true; do
-    echo "🔹Current WordPress version is set to: $WP_VERSION"
-    read -p "💻 Enter WordPress version to install (press Enter to keep '$WP_VERSION'): " INPUT_WP_VERSION
-    INPUT_WP_VERSION=${INPUT_WP_VERSION:-$WP_VERSION}
+# ============================
+# WordPress Version & Download
+# ============================
 
-    # Validate input: must be 'latest' or x.y or x.y.z
-    if [[ "$INPUT_WP_VERSION" == "latest" ]] || [[ "$INPUT_WP_VERSION" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
-        WP_VERSION="$INPUT_WP_VERSION"
-        echo "✅ WordPress version set to: $WP_VERSION"
-        break
-    else
-        echo "❌ Invalid version format. Use 'latest' or semantic version like '6.8' or '6.8.3'."
-    fi
-done
-
-# Strip patch version (third digit) if present, only keep major.minor
-if [[ "$WP_VERSION" != "latest" ]]; then
-    WP_VERSION_MAJOR_MINOR=$(echo "$WP_VERSION" | awk -F. '{print $1 "." $2}')
-else
-    WP_VERSION_MAJOR_MINOR="latest"
-fi
-
-echo "ℹ️ Using WordPress archive version: $WP_VERSION_MAJOR_MINOR"
-
-
-
-# ========================
-# Download WordPress Core
-# ========================
 WP_DIR="wp"
 
-rm -rf "$WP_DIR"
-mkdir -p "$WP_DIR"
-
-# Detect OS for archive format
-UNAME_OUT="$(uname -s)"
-case "${UNAME_OUT}" in
-    Linux*|Darwin*)
-        EXT="tar.gz"
-        ;;
-    MINGW*|MSYS*|CYGWIN*|Windows*)
-        EXT="zip"
-        ;;
-    *)
-        echo "❌ Unsupported OS: ${UNAME_OUT}"
-        exit 1
-        ;;
-esac
-
-# Build URL
-if [ "$WP_VERSION" = "latest" ]; then
-    WP_URL="https://wordpress.org/latest.$EXT"
+# Check if WordPress core already exists
+if [ -d "$WP_DIR" ] && [ -f "$WP_DIR/wp-config-sample.php" ] && [ -f "$WP_DIR/wp-settings.php" ]; then
+    echo "✅ Existing WordPress installation detected in '$WP_DIR/'."
+    echo "⏭️  Skipping version prompt and download."
 else
-    WP_URL="https://wordpress.org/wordpress-$WP_VERSION_MAJOR_MINOR.$EXT"
-fi
+    # Prompt to confirm or update WordPress version
+    while true; do
+        echo "🔹Current WordPress version is set to: $WP_VERSION"
+        read -p "💻 Enter WordPress version to install (press Enter to keep '$WP_VERSION'): " INPUT_WP_VERSION
+        INPUT_WP_VERSION=${INPUT_WP_VERSION:-$WP_VERSION}
 
-ARCHIVE="wordpress.$EXT"
-echo "📥 Downloading WordPress $WP_VERSION_MAJOR_MINOR from $WP_URL ..."
-curl -L -o "$ARCHIVE" -w "%{http_code}" "$WP_URL" > http_status.txt
-STATUS=$(cat http_status.txt)
-rm http_status.txt
+        # Validate input: must be 'latest' or x.y or x.y.z
+        if [[ "$INPUT_WP_VERSION" == "latest" ]] || [[ "$INPUT_WP_VERSION" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+            WP_VERSION="$INPUT_WP_VERSION"
+            echo "✅ WordPress version set to: $WP_VERSION"
+            break
+        else
+            echo "❌ Invalid version format. Use 'latest' or semantic version like '6.8' or '6.8.3'."
+        fi
+    done
 
-# If download failed, fallback to major.minor or latest
-if [ "$STATUS" != "200" ]; then
-    echo "⚠️ $WP_URL not found (status $STATUS). Trying fallback..."
-    BASE_VERSION=$(echo "$WP_VERSION" | cut -d. -f1,2)
-    FALLBACK_URL="https://wordpress.org/wordpress-$BASE_VERSION.$EXT"
-    echo "🔄 Trying $FALLBACK_URL ..."
-    curl -L -o "$ARCHIVE" "$FALLBACK_URL" || {
-        echo "⚠️ Fallback failed, using latest..."
-        curl -L -o "$ARCHIVE" "https://wordpress.org/latest.$EXT"
-    }
-fi
-
-# Validate archive
-if [ "$EXT" = "tar.gz" ]; then
-    if ! file "$ARCHIVE" | grep -q "gzip compressed"; then
-        echo "❌ Not a valid tar.gz archive"
-        exit 1
+    # Strip patch version (third digit) if present, only keep major.minor
+    if [[ "$WP_VERSION" != "latest" ]]; then
+        WP_VERSION_MAJOR_MINOR=$(echo "$WP_VERSION" | awk -F. '{print $1 "." $2}')
+    else
+        WP_VERSION_MAJOR_MINOR="latest"
     fi
-    echo "📦 Extracting WordPress..."
-    tar -xzf "$ARCHIVE" || { echo "❌ Extraction failed"; exit 1; }
-else
-    if ! unzip -tq "$ARCHIVE" >/dev/null 2>&1; then
-        echo "❌ Not a valid zip archive"
-        exit 1
+
+    echo "ℹ️ Using WordPress archive version: $WP_VERSION_MAJOR_MINOR"
+
+    # Clean any leftover WP dir
+    rm -rf "$WP_DIR"
+    mkdir -p "$WP_DIR"
+
+    # Detect OS for archive format
+    UNAME_OUT="$(uname -s)"
+    case "${UNAME_OUT}" in
+        Linux*|Darwin*) EXT="tar.gz" ;;
+        MINGW*|MSYS*|CYGWIN*|Windows*) EXT="zip" ;;
+        *) echo "❌ Unsupported OS: ${UNAME_OUT}"; exit 1 ;;
+    esac
+
+    # Build URL
+    if [ "$WP_VERSION" = "latest" ]; then
+        WP_URL="https://wordpress.org/latest.$EXT"
+    else
+        WP_URL="https://wordpress.org/wordpress-$WP_VERSION_MAJOR_MINOR.$EXT"
     fi
-    echo "📦 Extracting WordPress..."
-    unzip -q "$ARCHIVE" || { echo "❌ Extraction failed"; exit 1; }
+
+    ARCHIVE="wordpress.$EXT"
+    echo "📥 Downloading WordPress $WP_VERSION_MAJOR_MINOR from $WP_URL ..."
+    curl -L -o "$ARCHIVE" -w "%{http_code}" "$WP_URL" > http_status.txt
+    STATUS=$(cat http_status.txt)
+    rm http_status.txt
+
+    # If download failed, fallback to major.minor or latest
+    if [ "$STATUS" != "200" ]; then
+        echo "⚠️ $WP_URL not found (status $STATUS). Trying fallback..."
+        BASE_VERSION=$(echo "$WP_VERSION" | cut -d. -f1,2)
+        FALLBACK_URL="https://wordpress.org/wordpress-$BASE_VERSION.$EXT"
+        echo "🔄 Trying $FALLBACK_URL ..."
+        curl -L -o "$ARCHIVE" "$FALLBACK_URL" || {
+            echo "⚠️ Fallback failed, using latest..."
+            curl -L -o "$ARCHIVE" "https://wordpress.org/latest.$EXT"
+        }
+    fi
+
+    # Validate archive and extract
+    if [ "$EXT" = "tar.gz" ]; then
+        if ! file "$ARCHIVE" | grep -q "gzip compressed"; then
+            echo "❌ Not a valid tar.gz archive"
+            exit 1
+        fi
+        echo "📦 Extracting WordPress..."
+        tar -xzf "$ARCHIVE" || { echo "❌ Extraction failed"; exit 1; }
+    else
+        if ! unzip -tq "$ARCHIVE" >/dev/null 2>&1; then
+            echo "❌ Not a valid zip archive"
+            exit 1
+        fi
+        echo "📦 Extracting WordPress..."
+        unzip -q "$ARCHIVE" || { echo "❌ Extraction failed"; exit 1; }
+    fi
+
+    rm "$ARCHIVE"
+    mv wordpress/* "$WP_DIR"/
+    rm -rf wordpress
+
+    echo "✅ WordPress $WP_VERSION_MAJOR_MINOR installed in $WP_DIR/"
 fi
 
-rm "$ARCHIVE"
-mv wordpress/* "$WP_DIR"/
-rm -rf wordpress
-
-echo "✅ WordPress $WP_VERSION_MAJOR_MINOR installed in $WP_DIR/"
 
 
 
@@ -445,22 +445,21 @@ HTACCESS_FILE=".htaccess"
 echo ""
 echo "🧱 Setting up .htaccess rewrite rules for WordPress ($WP_DIR)..."
 
-# Define the .htaccess content
-read -r -d '' HTACCESS_CONTENT <<'EOF'
+# Define the .htaccess content (hybrid-safe)
+cat > "$HTACCESS_FILE" <<EOF
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
 # --- Direct routes ---
 # Redirect /admin → /$WP_DIR/wp-admin
-RewriteRule ^admin$ $WP_DIR/wp-admin/ [R=301,L]
+RewriteRule ^admin$ ${WP_DIR}/wp-admin/ [R=301,L]
 
 # --- Serve favicon and similar assets directly ---
-# These lines ensure the icons are served without redirect loops
 RewriteCond %{REQUEST_FILENAME} -f
-RewriteRule ^(favicon\.(ico|svg|png))$ $1 [L]
+RewriteRule ^(favicon\.(ico|svg|png))$ \$1 [L]
 
 # --- WordPress rewrites ---
-RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteRule .* - [E=HTTP_AUTHORIZATION:\${HTTP:Authorization}]
 RewriteBase /
 
 RewriteRule ^index\.php$ - [L]
@@ -470,15 +469,13 @@ RewriteRule . /index.php [L]
 </IfModule>
 EOF
 
-# Create or overwrite the .htaccess file
-echo "$HTACCESS_CONTENT" > "$HTACCESS_FILE"
-
 # Confirm write
 if [ -f "$HTACCESS_FILE" ]; then
   echo "✅ .htaccess has been created/updated successfully."
 else
   echo "❌ Failed to write .htaccess. Please check permissions."
 fi
+
 
 
     # Prompt to create the database
@@ -502,9 +499,7 @@ fi
       fi
     fi
 
-else
-  echo "ℹ️ local-config.php already exists, not overwriting"
-fi
+
 
 echo "🎉 Setup complete!"
 echo "⚠️ Don't forget to update hosts, apache/vhosts and SSL cert."

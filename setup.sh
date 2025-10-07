@@ -350,6 +350,52 @@ EOL
 
     echo "✅ license-sync.php MU-plugin created"
 
+
+# ---------------------------------------------------------------------
+# Create or update .htaccess
+# ---------------------------------------------------------------------
+
+HTACCESS_FILE=".htaccess"
+
+echo ""
+echo "🧱 Setting up .htaccess rewrite rules for WordPress ($WP_DIR)..."
+
+# Define the .htaccess content
+read -r -d '' HTACCESS_CONTENT <<'EOF'
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# --- Direct routes ---
+# Redirect /admin → /$WP_DIR/wp-admin
+RewriteRule ^admin$ $WP_DIR/wp-admin/ [R=301,L]
+
+# --- Serve favicon and similar assets directly ---
+# These lines ensure the icons are served without redirect loops
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^(favicon\.(ico|svg|png))$ $1 [L]
+
+# --- WordPress rewrites ---
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+EOF
+
+# Create or overwrite the .htaccess file
+echo "$HTACCESS_CONTENT" > "$HTACCESS_FILE"
+
+# Confirm write
+if [ -f "$HTACCESS_FILE" ]; then
+  echo "✅ .htaccess has been created/updated successfully."
+else
+  echo "❌ Failed to write .htaccess. Please check permissions."
+fi
+
+
     # Prompt to create the database
     read -p "💻 Create this database locally? (y/n) [y]: " CREATE_DB
     CREATE_DB=${CREATE_DB:-y}

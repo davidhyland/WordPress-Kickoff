@@ -33,6 +33,7 @@ The original version included a submodule of WordPress but this loads the latest
   * Prompt for and create auth.json for secure premium plugins
   * Install all required plugins via Composer, installing Composer if needed
   * Prompt for and create local-config.php with provided database details
+  * Create .htaccess with specific rules for this WP structure
   * Optionally create the local mysql database
 
 ## Updating

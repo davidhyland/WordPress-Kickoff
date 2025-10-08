@@ -171,6 +171,43 @@ else
 fi
 
 
+# ==============================
+# Ensure /content/uploads exists
+# ==============================
+UPLOADS_DIR="content/uploads"
+
+echo "🗂️ Checking uploads directory..."
+
+if [ ! -d "$UPLOADS_DIR" ]; then
+  echo "📁 Creating uploads directory at $UPLOADS_DIR..."
+  mkdir -p "$UPLOADS_DIR" || { echo "❌ Failed to create $UPLOADS_DIR"; exit 1; }
+else
+  echo "✅ Uploads directory already exists."
+fi
+
+# Set writable permissions (Linux/macOS/XAMPP-safe)
+echo "🔒 Setting correct permissions for uploads..."
+chmod -R 755 content 2>/dev/null || true
+chmod -R 775 "$UPLOADS_DIR" 2>/dev/null || true
+
+# Create a blank index.php file to prevent directory listing
+INDEX_FILE="$UPLOADS_DIR/index.php"
+if [ ! -f "$INDEX_FILE" ]; then
+  echo "🧩 Creating blank index.php inside uploads..."
+  echo "<?php // Silence is golden. ?>" > "$INDEX_FILE"
+else
+  echo "✅ index.php already exists in uploads."
+fi
+
+# On Windows/XAMPP (Git Bash or WSL) this may not apply,
+# so we check writeability manually
+if [ ! -w "$UPLOADS_DIR" ]; then
+  echo "⚠️  $UPLOADS_DIR is not writable. Please adjust folder permissions manually."
+else
+  echo "✅ $UPLOADS_DIR is writable."
+fi
+
+
 
 
 # === Auth.json Setup for ACF Pro + Gravity Forms ===

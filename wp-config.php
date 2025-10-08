@@ -1,36 +1,54 @@
 <?php
-// ===================================================
-// Load database info and local development parameters
-// ===================================================
-if ( file_exists( dirname( __FILE__ ) . '/local-config.php' ) ) {
-	define( 'WP_LOCAL_DEV', true );
-	include( dirname( __FILE__ ) . '/local-config.php' );
-} else {
-	define( 'WP_LOCAL_DEV', false );
-	define( 'DB_NAME', '%%DB_NAME%%' );
-	define( 'DB_USER', '%%DB_USER%%' );
-	define( 'DB_PASSWORD', '%%DB_PASSWORD%%' );
-	define( 'DB_HOST', '%%DB_HOST%%' ); // Probably 'localhost'
+// SET ENVIRONMENT CONSTANT
+
+if( 'domain.com' == $_SERVER['SERVER_NAME'] ) {
+	define( 'ENV', 'production' );
+}
+elseif ( 'staging.domain.com' == $_SERVER['SERVER_NAME'] ) {
+	define( 'ENV', 'staging' );
+}
+elseif ( 'local.mcdill.kenmore' == $_SERVER['SERVER_NAME'] ) {
+	define( 'ENV', 'local' );
+}
+else {
+	define( 'ENV', 'production' );
 }
 
 
-// ========================
-// Custom WP Core
-// ========================
-define( 'WP_SITEURL', 'https://' . $_SERVER['HTTP_HOST'] . '/wp' );
+// =========================================================
+// Path & URL configuration for WordPress in /wp directory
+// =========================================================
+
+// --- Root path (one directory above wp-config.php)
+$root_dir = dirname(__FILE__);
+
+// --- WordPress core directory
+$wp_dir = $root_dir . '/wp';
+
+// --- Site URLs
 define( 'WP_HOME', 'https://' . $_SERVER['HTTP_HOST'] );
+define( 'WP_SITEURL', WP_HOME . '/wp' );
 
+// --- Custom content directory
+define( 'WP_CONTENT_DIR', $root_dir . '/content' );
+define( 'WP_CONTENT_URL', WP_HOME . '/content' );
 
-// ========================
-// Custom Content Directory
-// ========================
-define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/content' );
-define( 'WP_CONTENT_URL', 'https://' . $_SERVER['HTTP_HOST'] . '/content' );
-
-// ========================
-// Custom Uploads Directory
-// ========================
+// --- Uploads directory (relative to root, not /wp)
 define( 'UPLOADS', 'content/uploads' );
+define( 'UPLOADS_URL', WP_CONTENT_URL . '/uploads' );
+
+
+// ===================================================
+// Load database info and local development parameters
+// ===================================================
+if ( file_exists( __DIR__ . '/local-config.php' ) && 'local' === ENV ) {
+    include __DIR__ . '/local-config.php';
+} elseif ( file_exists( __DIR__ . '/staging-config.php' ) && 'staging' === ENV ) {
+    include __DIR__ . '/staging-config.php';
+} elseif ( file_exists( __DIR__ . '/production-config.php') && 'production' === ENV ) {
+    include __DIR__ . '/production-config.php';
+}
+
 
 // ================================================
 // You almost certainly do not want to change these
@@ -38,11 +56,6 @@ define( 'UPLOADS', 'content/uploads' );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
 
-// ==============================================================
-// Table prefix
-// Change this if you have multiple installs in the same database
-// ==============================================================
-// $table_prefix  = 'wp_'; // This is set in local-config
 
 // ================================
 // Language
@@ -50,18 +63,7 @@ define( 'DB_COLLATE', '' );
 // ================================
 define( 'WPLANG', '' );
 
-// ===========
-// Hide errors
-// ===========
-ini_set( 'display_errors', 0 );
-define( 'WP_DEBUG_DISPLAY', false );
 
-// =================================================================
-// Debug mode
-// Debugging? Enable these. Can also enable them in local-config.php
-// =================================================================
-// define( 'SAVEQUERIES', true );
-// define( 'WP_DEBUG', true );
 
 // ======================================
 // Load a Memcached config if we have one
@@ -78,6 +80,7 @@ define( 'STAGING_DOMAIN', '%%WP_STAGING_DOMAIN%%' ); // Does magic in WP Stack t
 // ===================
 // Bootstrap WordPress
 // ===================
-if ( !defined( 'ABSPATH' ) )
-	define( 'ABSPATH', dirname( __FILE__ ) . '/wp/' );
+if ( !defined('ABSPATH') ) {
+    define( 'ABSPATH', $wp_dir . '/' );
+}
 require_once( ABSPATH . 'wp-settings.php' );

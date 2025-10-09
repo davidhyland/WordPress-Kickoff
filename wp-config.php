@@ -20,7 +20,7 @@ else {
 // =========================================================
 
 // --- Root path (one directory above wp-config.php)
-$root_dir = dirname(__FILE__);
+$root_dir = str_replace('\\', '/', dirname(__FILE__));
 
 // --- WordPress core directory
 $wp_dir = $root_dir . '/wp';
@@ -32,10 +32,6 @@ define( 'WP_SITEURL', WP_HOME . '/wp' );
 // --- Custom content directory
 define( 'WP_CONTENT_DIR', $root_dir . '/content' );
 define( 'WP_CONTENT_URL', WP_HOME . '/content' );
-
-// --- Uploads directory (relative to root, not /wp)
-define( 'UPLOADS', 'content/uploads' );
-define( 'UPLOADS_URL', WP_CONTENT_URL . '/uploads' );
 
 
 // ===================================================

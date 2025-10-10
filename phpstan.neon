@@ -1,0 +1,50 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+    level: 7
+
+    paths:
+        - content/themes/
+
+    excludePaths:
+        analyse:
+            - vendor
+            - wp
+            - content/plugins
+
+    bootstrapFiles:
+        - vendor/php-stubs/wp-constants-stubs.php
+        - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+        - vendor/php-stubs/acf-pro-stubs/acf-pro-stubs.php
+
+    # WordPress + ACF stubs are sometimes loose with types
+    treatPhpDocTypesAsCertain: false
+
+    ignoreErrors:
+        # 🧩 MISSING TYPES
+        - '#🪪  missingType\.parameter#'
+        - '#🪪  missingType\.return#'
+        - '#🪪  missingType\.property#'
+        - '#Function .* has parameter .* with no type specified#'
+        - '#Function .* has no return type specified#'
+        - '#Property .* has no type specified#'
+
+        # ⚙️ WordPress dynamic functions and magic
+        - '#Call to an undefined function (get_field|the_field|acf_|add_action|add_filter|apply_filters|do_action)#'
+        - '#Call to an undefined method (WP_Error|WP_Image_Editor)#'
+        - '#Undefined variable: wp_|wpdb|post#'
+        - '#Offset .+ might not exist on array#'
+        - '#encapsedStringPart\.nonString#'
+
+        # 🔄 Overly strict boolean logic checks
+        - '#booleanAnd\.alwaysFalse#'
+        - '#booleanNot\.alwaysFalse#'
+        - '#identical\.alwaysFalse#'
+        - '#notIdentical\.alwaysTrue#'
+        - '#strict comparison using === between .+ and .+ will always evaluate to (true|false)#i'
+
+        # 🧠 ACF dynamic functions
+        - '#Call to an undefined function (get_field|the_field|have_rows|get_sub_field|get_fields|get_row_layout|update_field|the_sub_field)#'
+
+    reportUnmatchedIgnoredErrors: false

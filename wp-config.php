@@ -1,17 +1,23 @@
 <?php
 // SET ENVIRONMENT CONSTANT
-
 if( 'domain.com' == $_SERVER['SERVER_NAME'] ) {
 	define( 'ENV', 'production' );
 }
 elseif ( 'staging.domain.com' == $_SERVER['SERVER_NAME'] ) {
 	define( 'ENV', 'staging' );
 }
-elseif ( 'local.mcdill.kenmore' == $_SERVER['SERVER_NAME'] ) {
+elseif ( 'local.mcdill.xyz' == $_SERVER['SERVER_NAME'] ) {
 	define( 'ENV', 'local' );
 }
 else {
 	define( 'ENV', 'production' );
+}
+
+
+// Safety check: ensure WordPress is loading this config, not one from /wp/
+if ( defined( 'ABSPATH' ) && strpos( __FILE__, '/wp/' ) !== false ) {
+    error_log( '⚠️ WordPress is loading config from /wp/ instead of root: ' . __FILE__ );
+    die( 'Configuration error: wrong wp-config.php loaded.' );
 }
 
 
@@ -26,8 +32,8 @@ $root_dir = str_replace('\\', '/', dirname(__FILE__));
 $wp_dir = $root_dir . '/wp';
 
 // --- Site URLs
-define( 'WP_HOME', 'https://' . $_SERVER['HTTP_HOST'] );
-define( 'WP_SITEURL', WP_HOME . '/wp' );
+define( 'WP_HOME', 'https://' . $_SERVER['HTTP_HOST'] ); // Root URL
+define( 'WP_SITEURL', WP_HOME . '/wp' ); // WP Core URL
 
 // --- Custom content directory
 define( 'WP_CONTENT_DIR', $root_dir . '/content' );

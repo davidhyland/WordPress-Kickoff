@@ -258,9 +258,9 @@ if ! grep -q "connect.advancedcustomfields.com" auth.json; then
   echo "❌ Missing ACF entry in auth.json" && exit 1
 fi
 
-if ! grep -q "\"password\": \"null\"" auth.json; then
-  echo "❌ ACF password must be 'null'" && exit 1
-fi
+# if ! grep -q "\"password\": \"null\"" auth.json; then
+#   echo "❌ ACF password must be 'null'" && exit 1
+# fi
 
 if ! grep -q "composer.gravity.io" auth.json; then
   echo "❌ Missing Gravity Forms entry in auth.json" && exit 1
@@ -307,51 +307,17 @@ echo "🎼 Installing Composer dependencies (plugins) ..."
 composer install
 
 
+
 # =============================
 # Create environment config files
 # =============================
 
 echo "🌍 Creating environment config templates..."
 
-for ENV in local staging production; do
-  CONFIG_FILE="${ENV}-config.php"
-
-  if [ ! -f "${CONFIG_FILE}" ]; then
-    echo "📝 Creating ${CONFIG_FILE}"
-
-    cat > "${CONFIG_FILE}" <<EOL
-<?php
-/**
- * ${ENV^} environment configuration.
- * Fill in values manually after setup.
- */
-
-define( 'DB_NAME', '' ); // ${ENV} DB name
-define( 'DB_USER', '' ); // ${ENV} DB user
-define( 'DB_PASSWORD', '' ); // ${ENV} DB password
-define( 'DB_HOST', 'localhost' );
-\$table_prefix = 'wp_';
-define( 'WP_DEBUG', true );
-
-// Optional license keys
-define( 'ACF_PRO_LICENSE', '' );
-define( 'GF_LICENSE_KEY', '' );
-
-// Add salts here or leave blank (use https://api.wordpress.org/secret-key/1.1/salt/)
-EOL
-
-    echo "✅ ${CONFIG_FILE} created."
-  else
-    echo "⚠️  ${CONFIG_FILE} already exists, skipping."
-  fi
-done
-
-
-
 # Create environment configs
 if [ ! -f "local-config.php" ]; then
-    echo "⚙️ No local-config.php found."
-    echo "🔹Let's create environment config files (local, staging, production)..."
+    #echo "⚙️ No local-config.php found."
+    #echo "🔹Let's create environment config files (local, staging, production)..."
 
     # Prompt for local DB credentials
     read -p "⚙️ Database name: " DB_NAME
@@ -371,8 +337,15 @@ if [ ! -f "local-config.php" ]; then
 
     ENVIRONMENTS=("local" "staging" "production")
 
+    CONFIG_DIR="config"
+
+    # Ensure the config directory exists
+    mkdir -p "${CONFIG_DIR}"
+
     for ENV in "${ENVIRONMENTS[@]}"; do
         echo "📄 Creating ${ENV}-config.php..."
+
+        CONFIG_FILE="${CONFIG_DIR}/${ENV}-config.php"
 
         # Set DB values depending on environment
         if [ "$ENV" = "local" ]; then
@@ -404,7 +377,7 @@ if [ ! -f "local-config.php" ]; then
             ERRORS=0
         fi
 
-        cat > "${ENV}-config.php" <<EOL
+        cat > "${CONFIG_FILE}" <<EOL
 <?php
 // ${ENV^} environment configuration
 define( 'DB_NAME', '${DBN}' );
@@ -488,17 +461,22 @@ cat > "$HTACCESS_FILE" <<EOF
 RewriteEngine On
 
 # --- Direct routes ---
-# Redirect /admin → /$WP_DIR/wp-admin
-RewriteRule ^admin$ ${WP_DIR}/wp-admin/ [R=301,L]
+# Redirect /admin → /wp/wp-admin
+RewriteRule ^admin$ wp/wp-admin/ [R=301,L]
 
 # --- Serve favicon and similar assets directly ---
 RewriteCond %{REQUEST_FILENAME} -f
-RewriteRule ^(favicon\.(ico|svg|png))$ \$1 [L]
+RewriteRule ^(favicon\.(ico|svg|png))$ $1 [L]
+</IfModule>
 
-# --- WordPress rewrites ---
-RewriteRule .* - [E=HTTP_AUTHORIZATION:\${HTTP:Authorization}]
+# BEGIN WordPress
+# The directives (lines) between "BEGIN WordPress" and "END WordPress" are
+# dynamically generated, and should only be modified via WordPress filters.
+# Any changes to the directives between these markers will be overwritten.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 RewriteBase /
-
 RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

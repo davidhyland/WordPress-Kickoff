@@ -233,7 +233,7 @@ if [ ! -f "auth.json" ]; then
     SEP=""
 
     if [ -n "$ACF_KEY" ]; then
-      AUTH_CONTENT="$AUTH_CONTENT\n        \"connect.advancedcustomfields.com\": {\n            \"username\": \"$ACF_KEY\",\n            \"password\": \"null\"\n        }"
+      AUTH_CONTENT="$AUTH_CONTENT\n        \"connect.advancedcustomfields.com\": {\n            \"username\": \"$ACF_KEY\",\n            \"password\": \"$SITE_URL\"\n        }"
       SEP=","
     fi
 

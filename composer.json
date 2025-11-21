@@ -13,11 +13,13 @@
     "wpackagist-plugin/updraftplus": "*",
     "wpackagist-plugin/version-info": "*",
     "wpackagist-plugin/wordpress-seo": "*",
+    "wpackagist-plugin/accessibility-onetap": "*",
     "wpengine/advanced-custom-fields-pro": "*",
     "gravity/gravityforms": "*",
     "gravity/gravityformsrecaptcha": "*",
     "davidhyland/all-in-one-wp-migration-unlimited-extension": "dev-master",
-    "davidhyland/happyfiles-pro": "dev-master"
+    "davidhyland/happyfiles-pro": "dev-master",
+    "davidhyland/wpconsent-premium": "dev-master"
   },
   "repositories": [
     {
@@ -39,6 +41,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/davidhyland/happyfiles-pro.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/davidhyland/wpconsent-premium.git"
     }
   ],
   "extra": {

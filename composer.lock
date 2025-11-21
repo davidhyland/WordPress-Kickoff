@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6b04016c2019eb5a6f2b5690e392ebe2",
+    "content-hash": "f99d3f0fc4fc2b92efdde1b36c885c56",
     "packages": [
         {
             "name": "composer/installers",
@@ -158,12 +158,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/davidhyland/all-in-one-wp-migration-unlimited-extension.git",
-                "reference": "3bed99ceaf995392b12211578334a5c5caffc0df"
+                "reference": "df2594388c3bfd543e444a5d85eb025703cbeafb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/davidhyland/all-in-one-wp-migration-unlimited-extension/zipball/3bed99ceaf995392b12211578334a5c5caffc0df",
-                "reference": "3bed99ceaf995392b12211578334a5c5caffc0df",
+                "url": "https://api.github.com/repos/davidhyland/all-in-one-wp-migration-unlimited-extension/zipball/df2594388c3bfd543e444a5d85eb025703cbeafb",
+                "reference": "df2594388c3bfd543e444a5d85eb025703cbeafb",
                 "shasum": ""
             },
             "default-branch": true,
@@ -174,7 +174,7 @@
             "support": {
                 "source": "https://github.com/davidhyland/all-in-one-wp-migration-unlimited-extension/tree/master"
             },
-            "time": "2025-09-12T14:38:43+00:00"
+            "time": "2025-11-10T16:39:54+00:00"
         },
         {
             "name": "davidhyland/happyfiles-pro",
@@ -201,11 +201,36 @@
             "time": "2025-09-12T14:39:25+00:00"
         },
         {
-            "name": "gravity/gravityforms",
-            "version": "2.9.19",
+            "name": "davidhyland/wpconsent-premium",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/davidhyland/wpconsent-premium.git",
+                "reference": "d0afab8b0823e5ff75b8c23b9b82acfa0ceba78e"
+            },
             "dist": {
                 "type": "zip",
-                "url": "https://composer.gravity.io/downloads/?plugin=gravityforms&version=2.9.19"
+                "url": "https://api.github.com/repos/davidhyland/wpconsent-premium/zipball/d0afab8b0823e5ff75b8c23b9b82acfa0ceba78e",
+                "reference": "d0afab8b0823e5ff75b8c23b9b82acfa0ceba78e",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "wordpress-plugin",
+            "license": [
+                "proprietary"
+            ],
+            "support": {
+                "source": "https://github.com/davidhyland/wpconsent-premium/tree/master",
+                "issues": "https://github.com/davidhyland/wpconsent-premium/issues"
+            },
+            "time": "2025-11-21T16:17:44+00:00"
+        },
+        {
+            "name": "gravity/gravityforms",
+            "version": "2.9.22",
+            "dist": {
+                "type": "zip",
+                "url": "https://composer.gravity.io/downloads/?plugin=gravityforms&version=2.9.22"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -214,15 +239,33 @@
         },
         {
             "name": "gravity/gravityformsrecaptcha",
-            "version": "2.0.2",
+            "version": "2.1.0",
             "dist": {
                 "type": "zip",
-                "url": "https://composer.gravity.io/downloads/?plugin=gravityformsrecaptcha&version=2.0.2"
+                "url": "https://composer.gravity.io/downloads/?plugin=gravityformsrecaptcha&version=2.1.0"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
             },
             "type": "wordpress-plugin"
+        },
+        {
+            "name": "wpackagist-plugin/accessibility-onetap",
+            "version": "2.6.3",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/accessibility-onetap/",
+                "reference": "tags/2.6.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/accessibility-onetap.2.6.3.zip"
+            },
+            "require": {
+                "composer/installers": "^1.0 || ^2.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/accessibility-onetap/"
         },
         {
             "name": "wpackagist-plugin/acf-content-analysis-for-yoast-seo",
@@ -244,15 +287,15 @@
         },
         {
             "name": "wpackagist-plugin/all-in-one-wp-migration",
-            "version": "7.100",
+            "version": "7.101",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/all-in-one-wp-migration/",
-                "reference": "tags/7.100"
+                "reference": "tags/7.101"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/all-in-one-wp-migration.7.100.zip"
+                "url": "https://downloads.wordpress.org/plugin/all-in-one-wp-migration.7.101.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -316,15 +359,15 @@
         },
         {
             "name": "wpackagist-plugin/sg-cachepress",
-            "version": "7.7.2",
+            "version": "7.7.4",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/sg-cachepress/",
-                "reference": "tags/7.7.2"
+                "reference": "tags/7.7.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/sg-cachepress.7.7.2.zip"
+                "url": "https://downloads.wordpress.org/plugin/sg-cachepress.7.7.4.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -352,15 +395,15 @@
         },
         {
             "name": "wpackagist-plugin/simple-history",
-            "version": "5.16.0",
+            "version": "5.18.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/simple-history/",
-                "reference": "tags/5.16.0"
+                "reference": "tags/5.18.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/simple-history.5.16.0.zip"
+                "url": "https://downloads.wordpress.org/plugin/simple-history.5.18.0.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -370,15 +413,15 @@
         },
         {
             "name": "wpackagist-plugin/updraftplus",
-            "version": "1.25.8",
+            "version": "1.25.9",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/updraftplus/",
-                "reference": "tags/1.25.8"
+                "reference": "tags/1.25.9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/updraftplus.1.25.8.zip"
+                "url": "https://downloads.wordpress.org/plugin/updraftplus.1.25.9.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -406,15 +449,15 @@
         },
         {
             "name": "wpackagist-plugin/wordpress-seo",
-            "version": "26.1.1",
+            "version": "26.4",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/wordpress-seo/",
-                "reference": "tags/26.1.1"
+                "reference": "tags/26.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/wordpress-seo.26.1.1.zip"
+                "url": "https://downloads.wordpress.org/plugin/wordpress-seo.26.4.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -424,10 +467,10 @@
         },
         {
             "name": "wpengine/advanced-custom-fields-pro",
-            "version": "6.6.0",
+            "version": "6.6.2",
             "dist": {
                 "type": "zip",
-                "url": "https://connect.advancedcustomfields.com/v2/plugins/composer_download?s=composer&p=pro&t=6.6.0"
+                "url": "https://connect.advancedcustomfields.com/v2/plugins/composer_download?s=composer&p=pro&t=6.6.2"
             },
             "require": {
                 "composer/installers": "~1.0 || ~2.0"
@@ -494,16 +537,16 @@
         },
         {
             "name": "php-stubs/wordpress-stubs",
-            "version": "v6.8.2",
+            "version": "v6.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/wordpress-stubs.git",
-                "reference": "9c8e22e437463197c1ec0d5eaa9ddd4a0eb6d7f8"
+                "reference": "abeb5a8b58fda7ac21f15ee596f302f2959a7114"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/9c8e22e437463197c1ec0d5eaa9ddd4a0eb6d7f8",
-                "reference": "9c8e22e437463197c1ec0d5eaa9ddd4a0eb6d7f8",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/abeb5a8b58fda7ac21f15ee596f302f2959a7114",
+                "reference": "abeb5a8b58fda7ac21f15ee596f302f2959a7114",
                 "shasum": ""
             },
             "conflict": {
@@ -539,17 +582,17 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/wordpress-stubs/issues",
-                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.8.2"
+                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.8.3"
             },
-            "time": "2025-07-16T06:41:00+00:00"
+            "time": "2025-09-30T20:58:47+00:00"
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.31",
+            "version": "2.1.32",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ead89849d879fe203ce9292c6ef5e7e76f867b96",
-                "reference": "ead89849d879fe203ce9292c6ef5e7e76f867b96",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e126cad1e30a99b137b8ed75a85a676450ebb227",
+                "reference": "e126cad1e30a99b137b8ed75a85a676450ebb227",
                 "shasum": ""
             },
             "require": {
@@ -594,20 +637,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-10-10T14:14:11+00:00"
+            "time": "2025-11-11T15:18:17+00:00"
         },
         {
             "name": "szepeviktor/phpstan-wordpress",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/szepeviktor/phpstan-wordpress.git",
-                "reference": "963887b04c21fe7ac78e61c1351f8b00fff9f8f8"
+                "reference": "aa722f037b2d034828cd6c55ebe9e5c74961927e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/szepeviktor/phpstan-wordpress/zipball/963887b04c21fe7ac78e61c1351f8b00fff9f8f8",
-                "reference": "963887b04c21fe7ac78e61c1351f8b00fff9f8f8",
+                "url": "https://api.github.com/repos/szepeviktor/phpstan-wordpress/zipball/aa722f037b2d034828cd6c55ebe9e5c74961927e",
+                "reference": "aa722f037b2d034828cd6c55ebe9e5c74961927e",
                 "shasum": ""
             },
             "require": {
@@ -617,6 +660,7 @@
             },
             "require-dev": {
                 "composer/composer": "^2.1.14",
+                "composer/semver": "^3.4",
                 "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
                 "php-parallel-lint/php-parallel-lint": "^1.1",
                 "phpstan/phpstan-strict-rules": "^2.0",
@@ -654,16 +698,17 @@
             ],
             "support": {
                 "issues": "https://github.com/szepeviktor/phpstan-wordpress/issues",
-                "source": "https://github.com/szepeviktor/phpstan-wordpress/tree/v2.0.2"
+                "source": "https://github.com/szepeviktor/phpstan-wordpress/tree/v2.0.3"
             },
-            "time": "2025-02-12T18:43:37+00:00"
+            "time": "2025-09-14T02:58:22+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "davidhyland/all-in-one-wp-migration-unlimited-extension": 20,
-        "davidhyland/happyfiles-pro": 20
+        "davidhyland/happyfiles-pro": 20,
+        "davidhyland/wpconsent-premium": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

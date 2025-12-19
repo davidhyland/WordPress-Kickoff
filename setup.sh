@@ -29,103 +29,103 @@ if [ ! -x "$0" ]; then
 fi
 
 
-# Prompt to confirm or update WordPress version
-while true; do
-    echo "🔹Current WordPress version is set to: $WP_VERSION"
-    read -p "💻 Enter WordPress version to install (press Enter to keep '$WP_VERSION'): " INPUT_WP_VERSION
-    INPUT_WP_VERSION=${INPUT_WP_VERSION:-$WP_VERSION}
+# ============================
+# WordPress Version & Download
+# ============================
 
-    # Validate input: must be 'latest' or x.y or x.y.z
-    if [[ "$INPUT_WP_VERSION" == "latest" ]] || [[ "$INPUT_WP_VERSION" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
-        WP_VERSION="$INPUT_WP_VERSION"
-        echo "✅ WordPress version set to: $WP_VERSION"
-        break
-    else
-        echo "❌ Invalid version format. Use 'latest' or semantic version like '6.8' or '6.8.3'."
-    fi
-done
-
-# Strip patch version (third digit) if present, only keep major.minor
-if [[ "$WP_VERSION" != "latest" ]]; then
-    WP_VERSION_MAJOR_MINOR=$(echo "$WP_VERSION" | awk -F. '{print $1 "." $2}')
-else
-    WP_VERSION_MAJOR_MINOR="latest"
-fi
-
-echo "ℹ️ Using WordPress archive version: $WP_VERSION_MAJOR_MINOR"
-
-
-
-# ========================
-# Download WordPress Core
-# ========================
 WP_DIR="wp"
 
-rm -rf "$WP_DIR"
-mkdir -p "$WP_DIR"
-
-# Detect OS for archive format
-UNAME_OUT="$(uname -s)"
-case "${UNAME_OUT}" in
-    Linux*|Darwin*)
-        EXT="tar.gz"
-        ;;
-    MINGW*|MSYS*|CYGWIN*|Windows*)
-        EXT="zip"
-        ;;
-    *)
-        echo "❌ Unsupported OS: ${UNAME_OUT}"
-        exit 1
-        ;;
-esac
-
-# Build URL
-if [ "$WP_VERSION" = "latest" ]; then
-    WP_URL="https://wordpress.org/latest.$EXT"
+# Check if WordPress core already exists
+if [ -d "$WP_DIR" ] && [ -f "$WP_DIR/wp-config-sample.php" ] && [ -f "$WP_DIR/wp-settings.php" ]; then
+    echo "✅ Existing WordPress installation detected in '$WP_DIR/'."
+    echo "⏭️  Skipping version prompt and download."
 else
-    WP_URL="https://wordpress.org/wordpress-$WP_VERSION_MAJOR_MINOR.$EXT"
-fi
+    # Prompt to confirm or update WordPress version
+    while true; do
+        echo "🔹Current WordPress version is set to: $WP_VERSION"
+        read -p "💻 Enter WordPress version to install (press Enter to keep '$WP_VERSION'): " INPUT_WP_VERSION
+        INPUT_WP_VERSION=${INPUT_WP_VERSION:-$WP_VERSION}
 
-ARCHIVE="wordpress.$EXT"
-echo "📥 Downloading WordPress $WP_VERSION_MAJOR_MINOR from $WP_URL ..."
-curl -L -o "$ARCHIVE" -w "%{http_code}" "$WP_URL" > http_status.txt
-STATUS=$(cat http_status.txt)
-rm http_status.txt
+        # Validate input: must be 'latest' or x.y or x.y.z
+        if [[ "$INPUT_WP_VERSION" == "latest" ]] || [[ "$INPUT_WP_VERSION" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+            WP_VERSION="$INPUT_WP_VERSION"
+            echo "✅ WordPress version set to: $WP_VERSION"
+            break
+        else
+            echo "❌ Invalid version format. Use 'latest' or semantic version like '6.8' or '6.8.3'."
+        fi
+    done
 
-# If download failed, fallback to major.minor or latest
-if [ "$STATUS" != "200" ]; then
-    echo "⚠️ $WP_URL not found (status $STATUS). Trying fallback..."
-    BASE_VERSION=$(echo "$WP_VERSION" | cut -d. -f1,2)
-    FALLBACK_URL="https://wordpress.org/wordpress-$BASE_VERSION.$EXT"
-    echo "🔄 Trying $FALLBACK_URL ..."
-    curl -L -o "$ARCHIVE" "$FALLBACK_URL" || {
-        echo "⚠️ Fallback failed, using latest..."
-        curl -L -o "$ARCHIVE" "https://wordpress.org/latest.$EXT"
-    }
-fi
-
-# Validate archive
-if [ "$EXT" = "tar.gz" ]; then
-    if ! file "$ARCHIVE" | grep -q "gzip compressed"; then
-        echo "❌ Not a valid tar.gz archive"
-        exit 1
+    # Strip patch version (third digit) if present, only keep major.minor
+    if [[ "$WP_VERSION" != "latest" ]]; then
+        WP_VERSION_MAJOR_MINOR=$(echo "$WP_VERSION" | awk -F. '{print $1 "." $2}')
+    else
+        WP_VERSION_MAJOR_MINOR="latest"
     fi
-    echo "📦 Extracting WordPress..."
-    tar -xzf "$ARCHIVE" || { echo "❌ Extraction failed"; exit 1; }
-else
-    if ! unzip -tq "$ARCHIVE" >/dev/null 2>&1; then
-        echo "❌ Not a valid zip archive"
-        exit 1
+
+    echo "ℹ️ Using WordPress archive version: $WP_VERSION_MAJOR_MINOR"
+
+    # Clean any leftover WP dir
+    rm -rf "$WP_DIR"
+    mkdir -p "$WP_DIR"
+
+    # Detect OS for archive format
+    UNAME_OUT="$(uname -s)"
+    case "${UNAME_OUT}" in
+        Linux*|Darwin*) EXT="tar.gz" ;;
+        MINGW*|MSYS*|CYGWIN*|Windows*) EXT="zip" ;;
+        *) echo "❌ Unsupported OS: ${UNAME_OUT}"; exit 1 ;;
+    esac
+
+    # Build URL
+    if [ "$WP_VERSION" = "latest" ]; then
+        WP_URL="https://wordpress.org/latest.$EXT"
+    else
+        WP_URL="https://wordpress.org/wordpress-$WP_VERSION_MAJOR_MINOR.$EXT"
     fi
-    echo "📦 Extracting WordPress..."
-    unzip -q "$ARCHIVE" || { echo "❌ Extraction failed"; exit 1; }
+
+    ARCHIVE="wordpress.$EXT"
+    echo "📥 Downloading WordPress $WP_VERSION_MAJOR_MINOR from $WP_URL ..."
+    curl -L -o "$ARCHIVE" -w "%{http_code}" "$WP_URL" > http_status.txt
+    STATUS=$(cat http_status.txt)
+    rm http_status.txt
+
+    # If download failed, fallback to major.minor or latest
+    if [ "$STATUS" != "200" ]; then
+        echo "⚠️ $WP_URL not found (status $STATUS). Trying fallback..."
+        BASE_VERSION=$(echo "$WP_VERSION" | cut -d. -f1,2)
+        FALLBACK_URL="https://wordpress.org/wordpress-$BASE_VERSION.$EXT"
+        echo "🔄 Trying $FALLBACK_URL ..."
+        curl -L -o "$ARCHIVE" "$FALLBACK_URL" || {
+            echo "⚠️ Fallback failed, using latest..."
+            curl -L -o "$ARCHIVE" "https://wordpress.org/latest.$EXT"
+        }
+    fi
+
+    # Validate archive and extract
+    if [ "$EXT" = "tar.gz" ]; then
+        if ! file "$ARCHIVE" | grep -q "gzip compressed"; then
+            echo "❌ Not a valid tar.gz archive"
+            exit 1
+        fi
+        echo "📦 Extracting WordPress..."
+        tar -xzf "$ARCHIVE" || { echo "❌ Extraction failed"; exit 1; }
+    else
+        if ! unzip -tq "$ARCHIVE" >/dev/null 2>&1; then
+            echo "❌ Not a valid zip archive"
+            exit 1
+        fi
+        echo "📦 Extracting WordPress..."
+        unzip -q "$ARCHIVE" || { echo "❌ Extraction failed"; exit 1; }
+    fi
+
+    rm "$ARCHIVE"
+    mv wordpress/* "$WP_DIR"/
+    rm -rf wordpress
+
+    echo "✅ WordPress $WP_VERSION_MAJOR_MINOR installed in $WP_DIR/"
 fi
 
-rm "$ARCHIVE"
-mv wordpress/* "$WP_DIR"/
-rm -rf wordpress
-
-echo "✅ WordPress $WP_VERSION_MAJOR_MINOR installed in $WP_DIR/"
 
 
 
@@ -171,6 +171,43 @@ else
 fi
 
 
+# ==============================
+# Ensure /content/uploads exists
+# ==============================
+UPLOADS_DIR="content/uploads"
+
+echo "🗂️ Checking uploads directory..."
+
+if [ ! -d "$UPLOADS_DIR" ]; then
+  echo "📁 Creating uploads directory at $UPLOADS_DIR..."
+  mkdir -p "$UPLOADS_DIR" || { echo "❌ Failed to create $UPLOADS_DIR"; exit 1; }
+else
+  echo "✅ Uploads directory already exists."
+fi
+
+# Set writable permissions (Linux/macOS/XAMPP-safe)
+echo "🔒 Setting correct permissions for uploads..."
+chmod -R 755 content 2>/dev/null || true
+chmod -R 775 "$UPLOADS_DIR" 2>/dev/null || true
+
+# Create a blank index.php file to prevent directory listing
+INDEX_FILE="$UPLOADS_DIR/index.php"
+if [ ! -f "$INDEX_FILE" ]; then
+  echo "🧩 Creating blank index.php inside uploads..."
+  echo "<?php // Silence is golden. ?>" > "$INDEX_FILE"
+else
+  echo "✅ index.php already exists in uploads."
+fi
+
+# On Windows/XAMPP (Git Bash or WSL) this may not apply,
+# so we check writeability manually
+if [ ! -w "$UPLOADS_DIR" ]; then
+  echo "⚠️  $UPLOADS_DIR is not writable. Please adjust folder permissions manually."
+else
+  echo "✅ $UPLOADS_DIR is writable."
+fi
+
+
 
 
 # === Auth.json Setup for ACF Pro + Gravity Forms ===
@@ -196,7 +233,7 @@ if [ ! -f "auth.json" ]; then
     SEP=""
 
     if [ -n "$ACF_KEY" ]; then
-      AUTH_CONTENT="$AUTH_CONTENT\n        \"connect.advancedcustomfields.com\": {\n            \"username\": \"$ACF_KEY\",\n            \"password\": \"null\"\n        }"
+      AUTH_CONTENT="$AUTH_CONTENT\n        \"connect.advancedcustomfields.com\": {\n            \"username\": \"$ACF_KEY\",\n            \"password\": \"$SITE_URL\"\n        }"
       SEP=","
     fi
 
@@ -221,9 +258,9 @@ if ! grep -q "connect.advancedcustomfields.com" auth.json; then
   echo "❌ Missing ACF entry in auth.json" && exit 1
 fi
 
-if ! grep -q "\"password\": \"null\"" auth.json; then
-  echo "❌ ACF password must be 'null'" && exit 1
-fi
+# if ! grep -q "\"password\": \"null\"" auth.json; then
+#   echo "❌ ACF password must be 'null'" && exit 1
+# fi
 
 if ! grep -q "composer.gravity.io" auth.json; then
   echo "❌ Missing Gravity Forms entry in auth.json" && exit 1
@@ -269,11 +306,20 @@ fi
 echo "🎼 Installing Composer dependencies (plugins) ..."
 composer install
 
-# Create local-config.php if missing
-if [ ! -f "local-config.php" ]; then
-    echo "⚙️ No local-config.example.php found."
-    echo "🔹Let's create local-config.php interactively..."
 
+
+# =============================
+# Create environment config files
+# =============================
+
+echo "🌍 Creating environment config templates..."
+
+# Create environment configs
+if [ ! -f "local-config.php" ]; then
+    #echo "⚙️ No local-config.php found."
+    #echo "🔹Let's create environment config files (local, staging, production)..."
+
+    # Prompt for local DB credentials
     read -p "⚙️ Database name: " DB_NAME
     read -p "⚙️ Database user [root]: " DB_USER
     DB_USER=${DB_USER:-root}
@@ -286,20 +332,64 @@ if [ ! -f "local-config.php" ]; then
     read -p "⚙️ Table prefix [wp_]: " TABLE_PREFIX
     TABLE_PREFIX=${TABLE_PREFIX:-wp_}
 
-    read -p "💻 Enable WP_DEBUG? (true/false) [true]: " WP_DEBUG
-    WP_DEBUG=${WP_DEBUG:-true}
-
     echo "🔑 Fetching WordPress salts..."
     SALTS=$(curl -s https://api.wordpress.org/secret-key/1.1/salt/)
 
-    cat > local-config.php <<EOL
+    ENVIRONMENTS=("local" "staging" "production")
+
+    CONFIG_DIR="config"
+
+    # Ensure the config directory exists
+    mkdir -p "${CONFIG_DIR}"
+
+    for ENV in "${ENVIRONMENTS[@]}"; do
+        echo "📄 Creating ${ENV}-config.php..."
+
+        CONFIG_FILE="${CONFIG_DIR}/${ENV}-config.php"
+
+        # Set DB values depending on environment
+        if [ "$ENV" = "local" ]; then
+            DBN=$DB_NAME
+            DBU=$DB_USER
+            DBP=$DB_PASSWORD
+            DBH=$DB_HOST
+            DEBUG="true"
+            LOG="true"
+            DISPLAY="true"
+            ERRORS=1
+        elif [ "$ENV" = "staging" ]; then
+            DBN=""
+            DBU=""
+            DBP=""
+            DBH="localhost"
+            DEBUG="true"
+            LOG="true"
+            DISPLAY="false"
+            ERRORS=0
+        else # production
+            DBN=""
+            DBU=""
+            DBP=""
+            DBH="localhost"
+            DEBUG="false"
+            LOG="false"
+            DISPLAY="false"
+            ERRORS=0
+        fi
+
+        cat > "${CONFIG_FILE}" <<EOL
 <?php
-define( 'DB_NAME', '${DB_NAME}' );
-define( 'DB_USER', '${DB_USER}' );
-define( 'DB_PASSWORD', '${DB_PASSWORD}' );
-define( 'DB_HOST', '${DB_HOST}' );
+// ${ENV^} environment configuration
+define( 'DB_NAME', '${DBN}' );
+define( 'DB_USER', '${DBU}' );
+define( 'DB_PASSWORD', '${DBP}' );
+define( 'DB_HOST', '${DBH}' );
 \$table_prefix = '${TABLE_PREFIX}';
-define( 'WP_DEBUG', ${WP_DEBUG} );
+
+define( 'WP_DEBUG', ${DEBUG} );
+define( 'WP_DEBUG_LOG', ${LOG} );
+define( 'WP_DEBUG_DISPLAY', ${DISPLAY} );
+ini_set( 'display_errors', ${ERRORS} );
 
 define( 'ACF_PRO_LICENSE', '${ACF_KEY}' );
 define( 'GF_LICENSE_KEY', '${GF_KEY}' );
@@ -308,7 +398,12 @@ define( 'GF_LICENSE_KEY', '${GF_KEY}' );
 ${SALTS}
 EOL
 
-    echo "✅ Created local-config.php with provided values"
+    echo "✅ ${ENV}-config.php created."
+
+    done
+
+    echo "✅ All environment configs created: local, staging, and production."
+fi
 
 
 
@@ -360,24 +455,28 @@ HTACCESS_FILE=".htaccess"
 echo ""
 echo "🧱 Setting up .htaccess rewrite rules for WordPress ($WP_DIR)..."
 
-# Define the .htaccess content
-read -r -d '' HTACCESS_CONTENT <<'EOF'
+# Define the .htaccess content (hybrid-safe)
+cat > "$HTACCESS_FILE" <<EOF
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
 # --- Direct routes ---
-# Redirect /admin → /$WP_DIR/wp-admin
-RewriteRule ^admin$ $WP_DIR/wp-admin/ [R=301,L]
+# Redirect /admin → /wp/wp-admin
+RewriteRule ^admin$ wp/wp-admin/ [R=301,L]
 
 # --- Serve favicon and similar assets directly ---
-# These lines ensure the icons are served without redirect loops
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^(favicon\.(ico|svg|png))$ $1 [L]
+</IfModule>
 
-# --- WordPress rewrites ---
+# BEGIN WordPress
+# The directives (lines) between "BEGIN WordPress" and "END WordPress" are
+# dynamically generated, and should only be modified via WordPress filters.
+# Any changes to the directives between these markers will be overwritten.
+<IfModule mod_rewrite.c>
+RewriteEngine On
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 RewriteBase /
-
 RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
@@ -385,15 +484,13 @@ RewriteRule . /index.php [L]
 </IfModule>
 EOF
 
-# Create or overwrite the .htaccess file
-echo "$HTACCESS_CONTENT" > "$HTACCESS_FILE"
-
 # Confirm write
 if [ -f "$HTACCESS_FILE" ]; then
   echo "✅ .htaccess has been created/updated successfully."
 else
   echo "❌ Failed to write .htaccess. Please check permissions."
 fi
+
 
 
     # Prompt to create the database
@@ -417,9 +514,7 @@ fi
       fi
     fi
 
-else
-  echo "ℹ️ local-config.php already exists, not overwriting"
-fi
+
 
 echo "🎉 Setup complete!"
 echo "⚠️ 1. Don't forget to update hosts, apache/vhosts and SSL cert."

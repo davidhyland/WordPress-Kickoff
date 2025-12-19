@@ -1,6 +1,6 @@
-# WordPress Skeleton
+# WordPress KickOff
 
-This is simply a skeleton repo for a WordPress site, forked from https://github.com/markjaquith/WordPress-Skeleton. 
+This is simply a skeleton repo for a WordPress site inspired by https://github.com/markjaquith/WordPress-Skeleton.
 Clone it to jump-start your WordPress site repos, or fork it and customize it to your own liking!
 The original version included a submodule of WordPress but this loads the latest official release
 
@@ -16,7 +16,7 @@ The original version included a submodule of WordPress but this loads the latest
 
 * Clone this repo with submodules included (the WP core):
 
-`git clone https://github.com/davidhyland/WordPress-Starter.git .`
+`git clone https://github.com/davidhyland/WordPress-Kickoff.git .`
 
   Note the final `.` which clones the files into the folder root. Replace with `foldername` if desired. Destination folder must be empty.
 
@@ -33,6 +33,7 @@ The original version included a submodule of WordPress but this loads the latest
   * Prompt for and create auth.json for secure premium plugins
   * Install all required plugins via Composer, installing Composer if needed
   * Prompt for and create local-config.php with provided database details
+  * Create staging and production config files, just needs database details to be added later
   * Create .htaccess with specific rules for this WP structure
   * Optionally create the local mysql database
 

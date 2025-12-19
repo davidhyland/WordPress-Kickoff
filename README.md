@@ -37,6 +37,10 @@ The original version included a submodule of WordPress but this loads the latest
   * Create .htaccess with specific rules for this WP structure
   * Optionally create the local mysql database
 
+* gitignore exludes plugins from the repo so use this command to create a plugin list that can be committed.
+
+`./listplugins.sh`
+
 ## Updating
 
 * To update the config make your changes to composer.json then run `composer update --no-install` to update composer.lock

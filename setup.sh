@@ -422,6 +422,7 @@ else
 fi
 
 echo "🎉 Setup complete!"
-echo "⚠️ Don't forget to update hosts, apache/vhosts and SSL cert."
-echo "⚠️ You should also delete this setup.sh file after running it."
+echo "⚠️ 1. Don't forget to update hosts, apache/vhosts and SSL cert."
+echo "⚠️ 2. Also update wp-config with appropriate domain values."
+echo "⚠️ 3. You should also delete this setup.sh file after running it."
 echo "✅ Ciao. Adios. Goodnight!"

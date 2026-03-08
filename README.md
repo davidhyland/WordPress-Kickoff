@@ -25,6 +25,10 @@ The original version included a submodule of WordPress but this loads the latest
 * Also update the MYSQL_EXE constant with the local mysql.exe path, if auto creation of database is desired
 * Open Git Bash (or a Git Bash terminal in VSC) and run setup. 
 
+For custom structure
+`./setup-custom.sh`
+
+For default structure
 `./setup.sh`
 
 * This script takes around a minute to complete and will:

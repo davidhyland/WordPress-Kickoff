@@ -2,6 +2,7 @@
   "name": "davidhyland/wp-plugin-bundle",
   "type": "project",
   "require": {
+    "composer/installers": "^2.0",
     "wpackagist-plugin/acf-content-analysis-for-yoast-seo": "*",
     "wpackagist-plugin/all-in-one-wp-migration": "*",
     "wpackagist-plugin/classic-editor": "*",
@@ -50,7 +51,7 @@
   ],
   "extra": {
     "installer-paths": {
-      "content/plugins/{$name}/": ["type:wordpress-plugin"]
+      "wp-content/plugins/{$name}/": ["type:wordpress-plugin"]
     }
   },
   "config": {

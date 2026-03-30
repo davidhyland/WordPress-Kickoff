@@ -135,14 +135,34 @@ require_once ABSPATH . 'wp-settings.php';
 EOL
 fi
 
-# Final Database Creation Step
-read -p "💻 Create database '$DB_NAME' now? (y/n) [y]: " CREATE_DB
+# ==============================
+# Database Creation (Fixed for Git Bash/Laragon)
+# ==============================
+read -p "💻 Create/Check database '$DB_NAME' now? (y/n) [y]: " CREATE_DB
 CREATE_DB=${CREATE_DB:-y}
-if [ "\$CREATE_DB" = "y" ]; then
-    if [ -z "\$DB_PASS" ]; then
-        "\$MYSQL_EXE" -u "\$DB_USER" -e "CREATE DATABASE IF NOT EXISTS \`\$DB_NAME\` CHARACTER SET utf8mb4;"
+
+if [ "$CREATE_DB" = "y" ]; then
+    echo "🔹 Accessing MySQL at $MYSQL_EXE..."
+    
+    # We use a double-check here: -h 127.0.0.1 often works better in Git Bash
+    # And we wrap variables in quotes to handle special characters in passwords
+    
+    if [ -z "$DB_PASS" ]; then
+        # Case: No Password (Laragon default)
+        "$MYSQL_EXE" -h 127.0.0.1 -u "$DB_USER" -e "CREATE DATABASE IF NOT EXISTS \`$DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
     else
-        "\$MYSQL_EXE" -u "\$DB_USER" -p"\$DB_PASS" -e "CREATE DATABASE IF NOT EXISTS \`\$DB_NAME\` CHARACTER SET utf8mb4;"
+        # Case: Password exists. 
+        # CRITICAL: No space between -p and the password variable
+        "$MYSQL_EXE" -h 127.0.0.1 -u "$DB_USER" -p"$DB_PASS" -e "CREATE DATABASE IF NOT EXISTS \`$DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+    fi
+
+    # Verify if it actually worked
+    if [ $? -eq 0 ]; then
+        echo "✅ Database '$DB_NAME' is ready."
+    else
+        echo "❌ MySQL Error: Database could not be created."
+        echo "Try running this manually in your Laragon terminal:"
+        echo "mysql -u root -e \"CREATE DATABASE $DB_NAME;\""
     fi
 fi
 

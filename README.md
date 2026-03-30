@@ -47,7 +47,7 @@ For default structure
 
 ## Updating
 
-* To update the config make your changes to composer.json then run `composer update --no-install` to update composer.lock
+* To update the config make your changes to composer.json then run `composer update --no-install --prefer-dist` to update composer.lock
 * Commit and push
 
 ## Questions & Answers

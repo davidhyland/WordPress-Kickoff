@@ -173,24 +173,25 @@ EOL
 fi
 
 # ==============================
-# Database & Config Setup
+# 1. Config File Creation (Conditional on Local Config)
 # ==============================
 
-if [ ! -f "wp-config.php" ]; then
-    echo "📄 Creating wp-config.php loader..."
+# We check for the local-config since the main wp-config is tracked in the repo
+if [ ! -f "config/local-config.php" ]; then
+    echo "📄 local-config.php not found. Starting environment setup..."
     
-    # Define variables here so they can be used below
     read -p "⚙️ DB Name [wp_database]: " DB_NAME
     DB_NAME=${DB_NAME:-wp_database}
     read -p "⚙️ DB User [root]: " DB_USER
     DB_USER=${DB_USER:-root}
     read -s -p "⚙️ DB Password []: " DB_PASS
-    echo "" # Add newline after silent password input
+    echo "" 
 
-    # Simple Salts Fetch
+    echo "🔐 Fetching WordPress salts..."
     SALTS=$(curl -s https://api.wordpress.org/secret-key/1.1/salt/)
 
-    # Create Local Config using the variables
+    # Create config/local-config.php
+    # This is the file your tracked wp-config.php will include
     cat > config/local-config.php <<EOL
 <?php
 define( 'DB_NAME', '$DB_NAME' );
@@ -198,32 +199,34 @@ define( 'DB_USER', '$DB_USER' );
 define( 'DB_PASSWORD', '$DB_PASS' );
 define( 'DB_HOST', 'localhost' );
 \$table_prefix = 'wp_';
+
+// License Keys for MU-Plugin sync
+define( 'ACF_PRO_LICENSE', '$ACF_KEY' );
+define( 'GF_LICENSE_KEY', '$GF_KEY' );
+
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
 $SALTS
 EOL
+    echo "✅ local-config.php created in /config/"
 
-    # Create main wp-config.php loader
-    cat > wp-config.php <<EOL
-<?php
-if ( file_exists( __DIR__ . '/config/local-config.php' ) ) {
-    include( __DIR__ . '/config/local-config.php' );
-}
-if ( !defined('ABSPATH') ) define('ABSPATH', __DIR__ . '/');
-require_once ABSPATH . 'wp-settings.php';
-EOL
+else
+    echo "ℹ️ local-config.php already exists. Reading credentials for DB check..."
+    # Extract values so the Database Creation step below has the right info
+    DB_NAME=$(grep "DB_NAME" config/local-config.php | cut -d "'" -f 4)
+    DB_USER=$(grep "DB_USER" config/local-config.php | cut -d "'" -f 4)
+    DB_PASS=$(grep "DB_PASSWORD" config/local-config.php | cut -d "'" -f 4)
 fi
 
 # ==============================
-# Database Creation
+# 2. Database Creation (Always Runs Check)
 # ==============================
-# Now $DB_NAME and $DB_USER are actually populated
-read -p "💻 Create database '$DB_NAME' now? (y/n) [y]: " CREATE_DB
+# This now has access to $DB_NAME whether it was just created or read from file
+read -p "💻 Create/Check database '$DB_NAME' now? (y/n) [y]: " CREATE_DB
 CREATE_DB=${CREATE_DB:-y}
 
 if [ "$CREATE_DB" = "y" ]; then
     echo "🔹 Accessing MySQL..."
-    # Note: If no password, the -p flag should be handled carefully
     if [ -z "$DB_PASS" ]; then
         "$MYSQL_EXE" -u "$DB_USER" -e "CREATE DATABASE IF NOT EXISTS \`$DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
     else
@@ -231,6 +234,5 @@ if [ "$CREATE_DB" = "y" ]; then
     fi
     echo "✅ DB check complete."
 fi
-
 
 echo "🎉 Setup complete! Move this folder into F:/laragon/www/ and restart Laragon."

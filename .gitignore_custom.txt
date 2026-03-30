@@ -1,0 +1,82 @@
+/shared
+/local-config.php
+/sql-dump-*.sql
+/db-sync
+/content/upgrade/
+.DS_Store
+
+# ========================
+# WordPress Skeleton Setup
+# ========================
+
+# Local config (never commit credentials)
+wp-config.php
+local-config.php
+
+# ========================
+# Content Directory
+# ========================
+
+# --- Plugins (Composer managed) ---
+/content/plugins/**
+#!/content/plugins/your-custom-plugin/   # keep only your custom plugin(s)
+
+# --- Themes ---
+/content/themes/twenty*
+
+# --- MU-Plugins (if you only want custom ones tracked) ---
+/content/mu-plugins/**
+!/content/mu-plugins/license-sync.php
+
+# --- Cache, upgrades, backups ---
+/content/cache/**
+/content/upgrade/**
+/content/ai1wm-backups/**
+/content/updraft/**
+/content/upgrade/**
+
+# --- Uploads ---
+/content/uploads/*
+!/content/uploads/index.php
+
+# ========================
+# Composer
+# ========================
+/vendor/
+/composer.phar
+
+# Composer authentication (private tokens, etc.)
+/auth.json
+!auth.example.json   # allow safe template in repo
+
+# Keep composer.json and composer.lock tracked for reproducible installs!
+
+# ========================
+# Node / Frontend build
+# ========================
+/node_modules/
+/package-lock.json
+dist/
+build/
+
+# ========================
+# Editor / OS junk
+# ========================
+.vscode/             # VS Code workspace settings
+*.code-workspace     # VS Code project files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*.log
+
+# Swap / temp files
+*.swp
+*.swo
+
+# ========================
+# Misc / Backups
+# ========================
+*.sql
+*.sql.gz
+*.zip
+*.tar.gz

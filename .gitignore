@@ -1,80 +1,86 @@
-/shared
-/local-config.php
-/sql-dump-*.sql
-/db-sync
-/content/upgrade/
-.DS_Store
-
 # ========================
-# WordPress Skeleton Setup
+# OS / Editor Junk
 # ========================
-
-# Local config (never commit credentials)
-wp-config.php
-local-config.php
-
-# ========================
-# Content Directory
-# ========================
-
-# --- Plugins (Composer managed) ---
-/content/plugins/**
-#!/content/plugins/your-custom-plugin/   # keep only your custom plugin(s)
-
-# --- Themes ---
-/content/themes/twenty*
-
-# --- MU-Plugins (if you only want custom ones tracked) ---
-/content/mu-plugins/**
-!/content/mu-plugins/license-sync.php
-
-# --- Cache, upgrades, backups ---
-/content/cache/**
-/content/upgrade/**
-/content/ai1wm-backups/**
-/content/updraft/**
-/content/upgrade/**
-
-# --- Uploads ---
-/content/uploads/*
-!/content/uploads/index.php
-
-# ========================
-# Composer
-# ========================
-/vendor/
-/composer.phar
-
-# Composer authentication (private tokens, etc.)
-/auth.json
-!auth.example.json   # allow safe template in repo
-
-# Keep composer.json and composer.lock tracked for reproducible installs!
-
-# ========================
-# Node / Frontend build
-# ========================
-/node_modules/
-/package-lock.json
-dist/
-build/
-
-# ========================
-# Editor / OS junk
-# ========================
-.vscode/             # VS Code workspace settings
-*.code-workspace     # VS Code project files
 .DS_Store
 Thumbs.db
 ehthumbs.db
 *.log
-
-# Swap / temp files
 *.swp
 *.swo
+.vscode/
+*.code-workspace
 
 # ========================
-# Misc / Backups
+# WordPress Core
+# ========================
+# Since you download WP into the root, you might want to ignore 
+# the core files to keep your repo focused on your custom work.
+/wp-admin/
+/wp-includes/
+/*.php
+!/index.php
+!/wp-config.php
+!/setup.sh
+
+# ========================
+# Configuration & Auth (CRITICAL)
+# ========================
+# Never commit your real credentials or license keys
+/config/local-config.php
+/config/staging-config.php
+/config/production-config.php
+/auth.json
+
+# Keep a template so you know what's missing on a new machine
+!/config/local-config-sample.php
+!/auth.example.json
+
+# ========================
+# Standard wp-content
+# ========================
+
+# --- Plugins ---
+# We ignore all plugins because Composer manages them.
+/wp-content/plugins/*
+!/wp-content/plugins/index.php
+# If you ever build a custom plugin, add an exclusion here:
+# !/wp-content/plugins/your-custom-plugin/
+
+# --- Themes ---
+# Ignore default themes, keep only your active custom theme
+/wp-content/themes/twenty*
+# !/wp-content/themes/your-custom-theme/
+
+# --- MU-Plugins ---
+/wp-content/mu-plugins/*
+!/wp-content/mu-plugins/license-sync.php
+
+# --- Uploads ---
+/wp-content/uploads/*
+!/wp-content/uploads/index.php
+
+# --- Maintenance & Backups ---
+/wp-content/cache/
+/wp-content/upgrade/
+/wp-content/ai1wm-backups/
+/wp-content/updraft/
+
+# ========================
+# Composer & Node
+# ========================
+/vendor/
+/composer.phar
+/node_modules/
+dist/
+build/
+
+# Keep these! They define your environment
+composer.json
+composer.lock
+package.json
+
+# ========================
+# Database Dumps
 # ========================
 *.sql
 *.sql.gz
